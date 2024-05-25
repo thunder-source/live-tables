@@ -39,6 +39,9 @@ export default function SidebarTableMenuItem({ item }: { item: SidebarTableMenuI
       value={item}
       id={to}
       style={{ boxShadow, y }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0 }}
     >
       <SidebarTableContextMenu>
         <MenuItem

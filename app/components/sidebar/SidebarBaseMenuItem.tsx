@@ -41,6 +41,9 @@ export default function SidebarBaseMenuItem({ item }: { item: Props }) {
       onDragEnd={handleDragEnd}
       dragListener={false}
       dragControls={controls}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0 }}
     >
       <SidebarBaseContextMenu>
         <SubMenu
@@ -53,7 +56,9 @@ export default function SidebarBaseMenuItem({ item }: { item: Props }) {
           onPointerDown={(e) => controls.start(e)}
           className="overflow-hidden truncate"
         >
-          <Reorder.Group onReorder={setTableItems} values={tableItems}>
+          <Reorder.Group initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0 }} onReorder={setTableItems} values={tableItems}>
             {tableItems.map((item) => (
               <SidebarTableMenuItem key={item.to} item={item} />
             ))}

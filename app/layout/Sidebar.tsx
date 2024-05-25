@@ -54,6 +54,7 @@ export default function SideBar() {
       className="select-none backdrop-blur-3xl"
       collapsed={collapsed}
       toggled={toggled}
+      transitionDuration={500}
       onBackdropClick={() => setToggled(false)}
       //   image={sidebarbg.src}
       breakPoint="md"
@@ -76,7 +77,7 @@ export default function SideBar() {
         </Menu>
         <Avatar
           fallback={collapsed ? 'LT' : 'LIVE TABLES'}
-          className={` mx-auto rounded-full  ${collapsed ? 'my-2 h-12 w-12' : 'my-4 mb-6 h-48 w-48'}`}
+          className={` mx-auto rounded-full transition-all duration-500   ${collapsed ? 'my-2 h-12 w-12' : 'my-4 mb-6 h-48 w-48'}`}
           src={logo.src}
           alt="logo"
         />
@@ -97,7 +98,13 @@ export default function SideBar() {
                 </MenuItem>
               );
             })}
-            <Reorder.Group onReorder={setBaseItems} values={baseItems}>
+            <Reorder.Group
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0 }}
+              onReorder={setBaseItems}
+              values={baseItems}
+            >
               {baseItems.map((item) => {
                 return <SidebarBaseMenuItem key={item.to} item={item} />;
               })}
