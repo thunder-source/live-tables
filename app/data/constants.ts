@@ -3,6 +3,8 @@ import { IoChatbubbleEllipses, IoChatbubbleEllipsesOutline } from 'react-icons/i
 import { SiWechat } from 'react-icons/si';
 import { TbBrandWechat } from 'react-icons/tb';
 import { TbTable, TbTableFilled } from 'react-icons/tb';
+import { GrTest } from 'react-icons/gr';
+import { SiTestinglibrary } from 'react-icons/si';
 export const links = [
   {
     name: 'dashboard',
@@ -21,6 +23,12 @@ export const links = [
     to: '/groupchat',
     icon: TbBrandWechat,
     activeIcon: SiWechat,
+  },
+  {
+    name: 'testing',
+    to: '/testing',
+    icon: GrTest,
+    activeIcon: SiTestinglibrary,
   },
 ];
 

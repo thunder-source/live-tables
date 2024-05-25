@@ -10,7 +10,7 @@ import { persistor, store } from '@/store/app';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import SimpleTextLoading from './layout/SimpleTextLoading';
-
+import { Toaster } from 'react-hot-toast';
 const inter = Inter({ subsets: ['latin'] });
 
 // export const metadata: Metadata = {
@@ -30,6 +30,7 @@ export default function RootLayout({
           <PersistGate loading={<SimpleTextLoading />} persistor={persistor}>
             <ThemeProvider attribute="class">
               <Theme accentColor="blue" grayColor="sand" radius="large" scaling="95%">
+                <Toaster position="bottom-right" />
                 <div className="flex h-screen w-screen">
                   <SideBar />
                   {children}

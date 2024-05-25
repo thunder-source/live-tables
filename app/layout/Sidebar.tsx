@@ -26,7 +26,7 @@ const menuItemStyles: MenuItemStyles = {
     color: 'var(--accent-9)',
   },
   subMenuContent: ({ level }) => ({
-    backgroundColor: level === 0 ? 'var(--accent-a1)' : 'transparent',
+    backgroundColor: level === 0 ? 'var(--accent-2)' : 'transparent',
   }),
   button: {
     [`&.${menuClasses.disabled}`]: {
@@ -51,7 +51,7 @@ export default function SideBar() {
 
   return (
     <Sidebar
-      className="select-none backdrop-blur-3xl"
+      className="relative z-50 select-none backdrop-blur-3xl"
       collapsed={collapsed}
       toggled={toggled}
       transitionDuration={500}
