@@ -12,7 +12,7 @@ export const BaseConfigSchema = z.object({
   id: z.string().length(15),
   name: z.string().min(3).max(20),
   tables: z.record(TableConfigSchema),
-  tableOrder: z.array(z.string())
+  tableOrder: z.array(z.string()),
 });
 
 // Define the state schema

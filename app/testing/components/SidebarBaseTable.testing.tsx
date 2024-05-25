@@ -223,15 +223,13 @@ const SidebarBaseTable: React.FC = () => {
               {baseOrder.map((baseId, index) => (
                 <Draggable key={baseId} draggableId={baseId} index={index}>
                   {(provided) => (
-                    <div className="mb-4 rounded border p-4">
-                      <h2
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        className="cursor-grab text-lg font-bold"
-                      >
-                        {bases[baseId].name}
-                      </h2>
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className="mb-4 rounded border p-4"
+                    >
+                      <h2 className="cursor-grab text-lg font-bold">{bases[baseId].name}</h2>
                       <button
                         onClick={() => handleDeleteBase(baseId)}
                         className="mb-2 bg-red-500 px-4 py-2 text-white"
@@ -243,15 +241,15 @@ const SidebarBaseTable: React.FC = () => {
                           <ul ref={provided.innerRef} {...provided.droppableProps}>
                             {bases[baseId].tableOrder.map((tableId, index) => (
                               <Draggable key={tableId} draggableId={tableId} index={index}>
-                                {/* {console.log(tableId)} */}
                                 {(provided) => (
-                                  <li className="mb-2 rounded border bg-gray-100/10 p-2">
+                                  <li
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className="mb-2 rounded border bg-gray-100/10 p-2"
+                                  >
                                     <div className="flex items-center justify-between">
-                                      <strong
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >
+                                      <strong>
                                         {bases[baseId].tables[tableId].name}
                                         {tableId}
                                       </strong>
