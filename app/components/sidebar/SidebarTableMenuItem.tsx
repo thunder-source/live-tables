@@ -1,19 +1,19 @@
-import React, { FC, SVGProps, useState } from 'react';
+import React, { useState } from 'react';
 import { useMotionValue, Reorder } from 'framer-motion';
 import { useRaisedShadow } from '@/hooks/use-raised-shadow';
 import { MenuItem } from 'react-pro-sidebar';
 import { usePathname, useRouter } from 'next/navigation';
 import SidebarTableContextMenu from '../contextMenu/SidebarTableContextMenu';
+import { TbTable, TbTableFilled } from 'react-icons/tb';
 
 export type SidebarTableMenuItemProps = {
-  activeIcon: FC<SVGProps<SVGSVGElement>>;
-  icon: FC<SVGProps<SVGSVGElement>>;
   name: string;
-  to: string;
+  id: string;
+  config: {};
 };
 
-export default function SidebarTableMenuItem({ item }: { item: SidebarTableMenuItemProps }) {
-  const { activeIcon: ActiveIcon, icon: Icon, name, to } = item;
+export default function SidebarTableMenuItem({ table }: { table: SidebarTableMenuItemProps }) {
+  const { name, id } = table;
   const [isDragging, setIsDragging] = useState(false);
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
@@ -29,15 +29,15 @@ export default function SidebarTableMenuItem({ item }: { item: SidebarTableMenuI
         // Prevent navigation and allow default context menu behavior
         if (e.button !== 2) {
           if (!isDragging) {
-            router.push(to, { scroll: false });
+            router.push(id, { scroll: false });
           }
           setIsDragging(false);
         }
       }}
       as="div"
       className="relative z-50"
-      value={item}
-      id={to}
+      value={id}
+      id={id}
       style={{ boxShadow, y }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -45,12 +45,12 @@ export default function SidebarTableMenuItem({ item }: { item: SidebarTableMenuI
     >
       <SidebarTableContextMenu>
         <MenuItem
-          className={`${pathName === to && 'bg-accent-a4'} truncate capitalize`}
+          className={`${pathName === id && 'bg-accent-a4'} truncate capitalize`}
           icon={
-            pathName === to ? (
-              <ActiveIcon className="h-7 w-7" />
+            pathName === id ? (
+              <TbTableFilled className="h-7 w-7" />
             ) : (
-              <Icon className="h-[25px] w-[25px]" />
+              <TbTable className="h-[25px] w-[25px]" />
             )
           }
         >

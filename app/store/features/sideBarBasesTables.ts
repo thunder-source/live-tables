@@ -10,7 +10,7 @@ const configSlice = createSlice({
   name: 'config',
   initialState,
   reducers: {
-    addBase: (state, action: PayloadAction<BaseConfig>) => {
+    createBase: (state, action: PayloadAction<BaseConfig>) => {
       const base = action.payload;
       state.bases[base.id] = base;
       state.baseOrder.push(base.id);
@@ -26,7 +26,7 @@ const configSlice = createSlice({
       delete state.bases[id];
       state.baseOrder = state.baseOrder.filter((baseId) => baseId !== id);
     },
-    addTable: (state, action: PayloadAction<{ baseId: string; table: TableConfig }>) => {
+    createTable: (state, action: PayloadAction<{ baseId: string; table: TableConfig }>) => {
       const { baseId, table } = action.payload;
       if (state.bases[baseId]) {
         state.bases[baseId].tables[table.id] = table;
@@ -61,10 +61,10 @@ const configSlice = createSlice({
 });
 
 export const {
-  addBase,
+  createBase,
   updateBase,
   deleteBase,
-  addTable,
+  createTable,
   updateTable,
   deleteTable,
   updateBaseOrder,

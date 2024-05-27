@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  addBase,
+  createBase,
   updateBase,
   deleteBase,
-  addTable,
+  createTable,
   updateTable,
   deleteTable,
   updateBaseOrder,
@@ -59,7 +59,7 @@ const SidebarBaseTable: React.FC = () => {
   const handleAddBase = () => {
     const result = BaseConfigSchema.safeParse(baseForm);
     if (result.success) {
-      dispatch(addBase(baseForm));
+      dispatch(createBase(baseForm));
       setBaseForm({ id: '', name: '', tables: {}, tableOrder: [] });
     } else {
       toast.error('Invalid Base Data');
@@ -82,7 +82,7 @@ const SidebarBaseTable: React.FC = () => {
   const handleAddTable = () => {
     const result = TableConfigSchema.safeParse(tableForm);
     if (result.success) {
-      dispatch(addTable({ baseId: selectedBaseId, table: tableForm }));
+      dispatch(createTable({ baseId: selectedBaseId, table: tableForm }));
       setTableForm({ id: '', name: '', config: {} });
     } else {
       toast.error('Invalid Table Data');

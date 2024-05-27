@@ -1,13 +1,14 @@
 import { ContextMenu } from '@radix-ui/themes';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 
 type Props = { children: ReactNode };
 
 export default function SidebarTableContextMenu(Props: Props) {
   const { children } = Props;
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <ContextMenu.Root>
-      <ContextMenu.Trigger>{children}</ContextMenu.Trigger>
+    <ContextMenu.Root onOpenChange={setIsOpen}>
+      <ContextMenu.Trigger className={`${isOpen && 'bg-accent-6'}`}>{children}</ContextMenu.Trigger>
       <ContextMenu.Content variant="soft" className="w-52">
         <ContextMenu.Item shortcut="⌘ E">Rename</ContextMenu.Item>
         <ContextMenu.Item disabled shortcut="⌘ D">

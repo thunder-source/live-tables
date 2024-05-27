@@ -1,15 +1,19 @@
 'use client';
 import { Avatar } from '@radix-ui/themes';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Sidebar, Menu, MenuItem, MenuItemStyles, menuClasses } from 'react-pro-sidebar';
 import { IoReorderThreeOutline } from 'react-icons/io5';
 import logo from '../assets/mainLogo.jpg';
 // import sidebarbg from '../assets/sidebarbg.jpg';
 import { usePathname, useRouter } from 'next/navigation';
-import { dynamicBaseLinks, links } from '../data/constants';
-import { Reorder } from 'framer-motion';
+import { links } from '../data/constants';
+import { Reorder, motion } from 'framer-motion';
 import { BsDatabaseAdd } from 'react-icons/bs';
 import SidebarBaseMenuItem from '@/components/sidebar/SidebarBaseMenuItem';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHandlers';
+import { updateBaseOrder } from '@/store/features/sideBarBasesTables';
+import debounce from '@/utils/debounce';
+import { openDialog } from '@/store/features/dialog';
 
 const menuItemStyles: MenuItemStyles = {
   root: {
@@ -43,11 +47,39 @@ const menuItemStyles: MenuItemStyles = {
 };
 
 export default function SideBar() {
+  const { baseOrder, bases } = useAppSelector((state) => state.sidebar);
+  const dispatch = useAppDispatch();
   const [collapsed, setCollapsed] = React.useState(false);
   const [toggled, setToggled] = React.useState(false);
-  const [baseItems, setBaseItems] = useState(dynamicBaseLinks);
+  const [baseItemsOrder, setBaseItemsOrder] = useState(baseOrder);
   const pathName = usePathname();
   const router = useRouter();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const reorderBase = useCallback(
+    debounce((newOrder: string[]) => {
+      console.log('update base order', newOrder);
+      dispatch(updateBaseOrder(newOrder));
+    }, 500),
+    [baseItemsOrder],
+  );
+
+  useEffect(() => {
+    // This is to update the baseItemsOrder whenever the baseOrder changes like curd in bases
+    if (baseOrder !== baseItemsOrder) {
+      setBaseItemsOrder(baseOrder);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [baseOrder]);
+
+  const handleReorderEnd = (newOrder: string[]) => {
+    setBaseItemsOrder(newOrder);
+    reorderBase(newOrder);
+  };
+
+  const createBaseHandler = () => {
+    dispatch(openDialog({ actionType: 'CREATE', entityType: 'BASE', entityId: 'CREATE_BASE' }));
+  };
 
   return (
     <Sidebar
@@ -75,12 +107,14 @@ export default function SideBar() {
             <span className={`ml-12 truncate text-2xl  ${collapsed && 'hidden'}`}>Live Tables</span>
           </MenuItem>
         </Menu>
-        <Avatar
-          fallback={collapsed ? 'LT' : 'LIVE TABLES'}
-          className={` mx-auto rounded-full transition-all duration-500   ${collapsed ? 'my-2 h-12 w-12' : 'my-4 mb-6 h-48 w-48'}`}
-          src={logo.src}
-          alt="logo"
-        />
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="mx-auto ">
+          <Avatar
+            fallback={collapsed ? 'LT' : 'LIVE TABLES'}
+            className={` rounded-full transition-all duration-500   ${collapsed ? 'my-2 h-12 w-12' : 'my-4 mb-6 h-48 w-48'}`}
+            src={logo.src}
+            alt="logo"
+          />
+        </motion.div>
         <div style={{ flex: 1, marginBottom: '32px' }}>
           <Menu menuItemStyles={menuItemStyles}>
             {links.map(({ activeIcon: ActiveIcon, icon: Icon, name, to }) => {
@@ -102,14 +136,23 @@ export default function SideBar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0 }}
-              onReorder={setBaseItems}
-              values={baseItems}
+              onReorder={setBaseItemsOrder}
+              values={baseItemsOrder}
             >
-              {baseItems.map((item) => {
-                return <SidebarBaseMenuItem key={item.to} item={item} />;
+              {baseItemsOrder.map((id: string) => {
+                if (!bases[id]) return null;
+                return (
+                  <SidebarBaseMenuItem
+                    key={id}
+                    base={bases[id]}
+                    handleReorderEnd={() => handleReorderEnd(baseItemsOrder)}
+                  />
+                );
               })}
             </Reorder.Group>
-            <MenuItem icon={<BsDatabaseAdd size={25} />}> Create Base</MenuItem>
+            <MenuItem icon={<BsDatabaseAdd size={25} />} onClick={createBaseHandler}>
+              Create Base
+            </MenuItem>
           </Menu>
         </div>
       </div>
