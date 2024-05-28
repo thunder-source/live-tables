@@ -66,7 +66,9 @@ const TableCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog })
               Cancel
             </Button>
           </Dialog.Close>
-          <Button loading={isLoading} onClick={crateBaseReduxHandler}>Save</Button>
+          <Button loading={isLoading} onClick={crateBaseReduxHandler}>
+            Save
+          </Button>
         </Flex>
       </Dialog.Content>
     </Dialog.Root>

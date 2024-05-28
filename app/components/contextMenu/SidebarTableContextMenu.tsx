@@ -4,10 +4,10 @@ import { TableConfig } from '@/types';
 import { ContextMenu } from '@radix-ui/themes';
 import React, { ReactNode, useState } from 'react';
 
-type Props = { children: ReactNode, table: TableConfig, baseId: string };
+type Props = { children: ReactNode; table: TableConfig; baseId: string; onClose: () => void; };
 
 export default function SidebarTableContextMenu(Props: Props) {
-  const { children, table, baseId } = Props;
+  const { children, table, baseId, onClose } = Props;
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -21,6 +21,7 @@ export default function SidebarTableContextMenu(Props: Props) {
       }),
     );
     setIsOpen(false);
+    onClose()
   };
   const renameBaseHandler = () => {
     dispatch(
@@ -32,15 +33,16 @@ export default function SidebarTableContextMenu(Props: Props) {
       }),
     );
     setIsOpen(false);
+    onClose()
   };
 
   return (
-    <ContextMenu.Root modal={true} onOpenChange={setIsOpen}>
+    <ContextMenu.Root modal={isOpen} onOpenChange={(e) => {
+      setIsOpen(e)
+      if (!e) onClose();
+    }}>
       <ContextMenu.Trigger className={`${isOpen && 'bg-accent-6'}`}>{children}</ContextMenu.Trigger>
-      <ContextMenu.Content
-        variant="soft"
-        className="w-52"
-      >
+      <ContextMenu.Content variant="soft" className="w-52">
         <ContextMenu.Item onClick={renameBaseHandler} shortcut="⌘ E">
           Rename
         </ContextMenu.Item>

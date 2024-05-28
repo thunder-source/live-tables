@@ -18,25 +18,46 @@ export default function SidebarTableMenuItem({
 }) {
   const { name, id } = table;
   const [isDragging, setIsDragging] = useState(false);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const pathName = usePathname();
   const router = useRouter();
 
+  const handlePointerUp = (e) => {
+    // Prevent navigation on right-click and when dragging
+    if (e.button !== 2 && !isDragging && !contextMenuOpen) {
+      router.push(`/${baseId}/${table.id}`);
+    }
+    setIsDragging(false);
+  };
+
+  const handleContextMenuOpen = (e) => {
+    e.preventDefault();
+    setContextMenuOpen(true);
+  };
+
+  const handleContextMenuClose = () => {
+    setContextMenuOpen(false);
+  };
+
   return (
     <Reorder.Item
       onPointerDown={() => setIsDragging(false)}
       onPointerMove={() => setIsDragging(true)}
-      onPointerUp={(e) => {
-        // Right-click
-        // Prevent navigation and allow default context menu behavior
-        if (e.button !== 2) {
-          if (!isDragging) {
-            // router.push(id, { scroll: false });
-          }
-          setIsDragging(false);
-        }
-      }}
+      // onPointerUp={(e) => {
+      //   // Right-click
+      //   // Prevent navigation and allow default context menu behavior
+      //   console.log(e)
+      //   if (e.button !== 2) {
+      //     if (!isDragging) {
+      //       router.push(`/${baseId}/${table.id}`)
+      //     }
+      //     setIsDragging(false);
+      //   }
+      // }}
+      onPointerUp={handlePointerUp}
+      onContextMenu={handleContextMenuOpen}
       as="div"
       className="relative z-50"
       value={id}
@@ -47,7 +68,7 @@ export default function SidebarTableMenuItem({
       transition={{ duration: 0 }}
       onDragEnd={handleTableReorderEnd}
     >
-      <SidebarTableContextMenu baseId={baseId} table={table}>
+      <SidebarTableContextMenu baseId={baseId} table={table} onClose={handleContextMenuClose}>
         <MenuItem
           className={`${pathName === id && 'bg-accent-a4'} truncate capitalize`}
           icon={

@@ -26,7 +26,7 @@ const TableUpdateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog })
       dispatch(
         updateTable({
           baseId: additionalOptions?.baseId,
-          table: { ...additionalOptions.tableConfig, name: nameInput }
+          table: { ...additionalOptions.tableConfig, name: nameInput },
         }),
       );
       dispatch(closeDialog());
@@ -46,10 +46,13 @@ const TableUpdateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog })
             <Text as="div" size="2" mb="1" weight="bold">
               Name
             </Text>
-            <TextField.Root value={nameInput}
+            <TextField.Root
+              value={nameInput}
               onChange={(e) => {
                 setNameInput(e.target.value);
-              }} placeholder="Enter Table Name You want to Update" />
+              }}
+              placeholder="Enter Table Name You want to Update"
+            />
           </label>
         </Flex>
 
@@ -59,8 +62,9 @@ const TableUpdateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog })
               Cancel
             </Button>
           </Dialog.Close>
-          <Button loading={isLoading} onClick={updateBaseReduxHandler}>Save</Button>
-
+          <Button loading={isLoading} onClick={updateBaseReduxHandler}>
+            Save
+          </Button>
         </Flex>
       </Dialog.Content>
     </Dialog.Root>

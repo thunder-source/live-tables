@@ -1,4 +1,3 @@
-
 import { BaseConfig, TableConfig } from '@/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -12,9 +11,9 @@ export interface DialogState {
     tableOrder?: string[];
     name?: string;
     tables?: { [key: string]: TableConfig };
-    baseId?: string
-    tableConfig?: TableConfig
-    baseConfig?: BaseConfig
+    baseId?: string;
+    tableConfig?: TableConfig;
+    baseConfig?: BaseConfig;
   } | null; // ID of the entity being operated on
 }
 

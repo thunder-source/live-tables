@@ -6,7 +6,7 @@ import { BaseConfig } from '@/types';
 
 type Props = {
   children: ReactNode;
-  base: BaseConfig
+  base: BaseConfig;
 };
 
 export default function SidebarBaseContextMenu(Props: Props) {

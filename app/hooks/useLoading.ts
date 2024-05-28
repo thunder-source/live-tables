@@ -2,7 +2,9 @@ import { useState, useCallback } from 'react';
 
 type UseLoadingHook = {
   isLoading: boolean;
+  // eslint-disable-next-line no-unused-vars
   startLoading: (callback: () => void) => void;
+  // eslint-disable-next-line no-unused-vars
   setGlobalLoadingTime: (time: number) => void;
 };
 
