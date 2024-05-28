@@ -24,7 +24,7 @@ export default function SidebarTableMenuItem({
   const pathName = usePathname();
   const router = useRouter();
 
-  const handlePointerUp = (e) => {
+  const handlePointerUp = (e: React.PointerEvent<any>) => {
     // Prevent navigation on right-click and when dragging
     if (e.button !== 2 && !isDragging && !contextMenuOpen) {
       router.push(`/${baseId}/${table.id}`);
@@ -32,7 +32,7 @@ export default function SidebarTableMenuItem({
     setIsDragging(false);
   };
 
-  const handleContextMenuOpen = (e) => {
+  const handleContextMenuOpen = (e: React.MouseEvent<any, MouseEvent>) => {
     e.preventDefault();
     setContextMenuOpen(true);
   };
@@ -45,17 +45,6 @@ export default function SidebarTableMenuItem({
     <Reorder.Item
       onPointerDown={() => setIsDragging(false)}
       onPointerMove={() => setIsDragging(true)}
-      // onPointerUp={(e) => {
-      //   // Right-click
-      //   // Prevent navigation and allow default context menu behavior
-      //   console.log(e)
-      //   if (e.button !== 2) {
-      //     if (!isDragging) {
-      //       router.push(`/${baseId}/${table.id}`)
-      //     }
-      //     setIsDragging(false);
-      //   }
-      // }}
       onPointerUp={handlePointerUp}
       onContextMenu={handleContextMenuOpen}
       as="div"
