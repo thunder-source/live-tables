@@ -1,56 +1,70 @@
-import React, { FC, SVGProps, useState } from 'react';
+import React, { useState } from 'react';
 import { useMotionValue, Reorder } from 'framer-motion';
 import { useRaisedShadow } from '@/hooks/use-raised-shadow';
 import { MenuItem } from 'react-pro-sidebar';
 import { usePathname, useRouter } from 'next/navigation';
 import SidebarTableContextMenu from '../contextMenu/SidebarTableContextMenu';
+import { TbTable, TbTableFilled } from 'react-icons/tb';
+import { TableConfig } from '@/types';
 
-export type SidebarTableMenuItemProps = {
-  activeIcon: FC<SVGProps<SVGSVGElement>>;
-  icon: FC<SVGProps<SVGSVGElement>>;
-  name: string;
-  to: string;
-};
-
-export default function SidebarTableMenuItem({ item }: { item: SidebarTableMenuItemProps }) {
-  const { activeIcon: ActiveIcon, icon: Icon, name, to } = item;
+export default function SidebarTableMenuItem({
+  baseId,
+  table,
+  handleTableReorderEnd,
+}: {
+  baseId: string;
+  handleTableReorderEnd: () => void;
+  table: TableConfig;
+}) {
+  const { name, id } = table;
   const [isDragging, setIsDragging] = useState(false);
+  const [contextMenuOpen, setContextMenuOpen] = useState(false);
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const pathName = usePathname();
   const router = useRouter();
 
+  const handlePointerUp = (e: React.PointerEvent<any>) => {
+    // Prevent navigation on right-click and when dragging
+    if (e.button !== 2 && !isDragging && !contextMenuOpen) {
+      router.push(`/${baseId}/${table.id}`);
+    }
+    setIsDragging(false);
+  };
+
+  const handleContextMenuOpen = (e: React.MouseEvent<any, MouseEvent>) => {
+    e.preventDefault();
+    setContextMenuOpen(true);
+  };
+
+  const handleContextMenuClose = () => {
+    setContextMenuOpen(false);
+  };
+
   return (
     <Reorder.Item
       onPointerDown={() => setIsDragging(false)}
       onPointerMove={() => setIsDragging(true)}
-      onPointerUp={(e) => {
-        // Right-click
-        // Prevent navigation and allow default context menu behavior
-        if (e.button !== 2) {
-          if (!isDragging) {
-            router.push(to, { scroll: false });
-          }
-          setIsDragging(false);
-        }
-      }}
+      onPointerUp={handlePointerUp}
+      onContextMenu={handleContextMenuOpen}
       as="div"
       className="relative z-50"
-      value={item}
-      id={to}
+      value={id}
+      id={id}
       style={{ boxShadow, y }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0 }}
+      onDragEnd={handleTableReorderEnd}
     >
-      <SidebarTableContextMenu>
+      <SidebarTableContextMenu baseId={baseId} table={table} onClose={handleContextMenuClose}>
         <MenuItem
-          className={`${pathName === to && 'bg-accent-a4'} truncate capitalize`}
+          className={`${pathName === id && 'bg-accent-a4'} truncate capitalize`}
           icon={
-            pathName === to ? (
-              <ActiveIcon className="h-7 w-7" />
+            pathName === id ? (
+              <TbTableFilled className="h-7 w-7" />
             ) : (
-              <Icon className="h-[25px] w-[25px]" />
+              <TbTable className="h-[25px] w-[25px]" />
             )
           }
         >

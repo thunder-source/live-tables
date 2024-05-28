@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import SimpleTextLoading from './layout/SimpleTextLoading';
 import { Toaster } from 'react-hot-toast';
+import DialogHandler from '@/components/dialog/DialogHandler';
 const inter = Inter({ subsets: ['latin'] });
 
 // export const metadata: Metadata = {
@@ -35,6 +36,7 @@ export default function RootLayout({
                   <SideBar />
                   {children}
                 </div>
+                <DialogHandler />
                 <ThemePanel />
               </Theme>
             </ThemeProvider>
