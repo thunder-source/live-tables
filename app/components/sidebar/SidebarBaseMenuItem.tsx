@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useMotionValue, Reorder, useDragControls } from 'framer-motion';
 import { useRaisedShadow } from '@/hooks/use-raised-shadow';
 import { MenuItem, SubMenu } from 'react-pro-sidebar';
 import { GoDatabase } from 'react-icons/go';
-import SidebarTableMenuItem, { SidebarTableMenuItemProps } from './SidebarTableMenuItem';
+import SidebarTableMenuItem from './SidebarTableMenuItem';
 import { TbTablePlus } from 'react-icons/tb';
 import SidebarBaseContextMenu from '../contextMenu/SidebarBaseContextMenu';
 import { useAppDispatch } from '@/hooks/reduxHandlers';
 import { openDialog } from '@/store/features/dialog';
+import debounce from '@/utils/debounce';
+import { updateTableOrder } from '@/store/features/sideBarBasesTables';
+import { BaseConfig } from '@/types';
 
 type Props = {
-  base: {
-    name: string;
-    id: string;
-    tableOrder: string[];
-    tables: { [key: string]: SidebarTableMenuItemProps };
-  };
-  handleReorderEnd: () => void;
+  base: BaseConfig;
+  handleBaseReorderEnd: () => void;
 };
 
-export default function SidebarBaseMenuItem({ base, handleReorderEnd }: Props) {
+export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Props) {
   const { name, tables, tableOrder, id } = base;
-  const [tableItems, setTableItems] = useState(tableOrder || []);
+  const [tableItemsOrder, setTableItemsOrder] = useState(tableOrder || []);
   const [isDragging, setIsDragging] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const y = useMotionValue(0);
@@ -34,7 +32,29 @@ export default function SidebarBaseMenuItem({ base, handleReorderEnd }: Props) {
 
   const handleDragEnd = () => {
     setIsDragging(false);
-    handleReorderEnd();
+    handleBaseReorderEnd();
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const reorderTable = useCallback(
+    debounce((newOrder: string[]) => {
+      console.log('update tables order', newOrder);
+      dispatch(updateTableOrder({ baseId: id, tableOrder: newOrder }));
+    }, 500),
+    [tableItemsOrder],
+  );
+
+  useEffect(() => {
+    // This is to update the tableItemsOrder whenever the tableOrder changes like curd in tables order
+    if (tableOrder !== tableItemsOrder) {
+      setTableItemsOrder(tableOrder);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableOrder]);
+
+  const handleTableReorderEnd = (newOrder: string[]) => {
+    setTableItemsOrder(newOrder);
+    reorderTable(newOrder);
   };
 
   return (
@@ -67,11 +87,19 @@ export default function SidebarBaseMenuItem({ base, handleReorderEnd }: Props) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0 }}
-            onReorder={setTableItems}
-            values={tableItems}
+            onReorder={setTableItemsOrder}
+            values={tableItemsOrder}
           >
-            {tableOrder.map((id: string) => {
-              return <SidebarTableMenuItem key={id} table={tables[id]} />;
+            {tableItemsOrder.map((id: string) => {
+              if (!tables[id]) return null;
+              return (
+                <SidebarTableMenuItem
+                  baseId={base.id}
+                  key={id}
+                  table={tables[id]}
+                  handleTableReorderEnd={() => handleTableReorderEnd(tableItemsOrder)}
+                />
+              );
             })}
           </Reorder.Group>
           <MenuItem

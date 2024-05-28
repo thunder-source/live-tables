@@ -1,3 +1,5 @@
+
+import { BaseConfig, TableConfig } from '@/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the state type
@@ -6,7 +8,14 @@ export interface DialogState {
   actionType: 'CREATE' | 'UPDATE' | 'DELETE' | null; // Type of action being performed
   entityType: 'TABLE' | 'BASE' | null; // Type of entity being operated on
   entityId: string | null; // ID of the entity being operated on
-  additionalOptions: { tableOrder?: string[], name?: string } | null; // ID of the entity being operated on
+  additionalOptions: {
+    tableOrder?: string[];
+    name?: string;
+    tables?: { [key: string]: TableConfig };
+    baseId?: string
+    tableConfig?: TableConfig
+    baseConfig?: BaseConfig
+  } | null; // ID of the entity being operated on
 }
 
 // Initial state

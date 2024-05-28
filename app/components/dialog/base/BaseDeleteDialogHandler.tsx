@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAppDispatch } from '@/hooks/reduxHandlers';
 import { DialogState, closeDialog } from '@/store/features/dialog';
 import { Button, Dialog, Flex } from '@radix-ui/themes';
 import { deleteBase } from '@/store/features/sideBarBasesTables';
+import useLoading from '@/hooks/useLoading';
 
 const BaseDeleteDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog }) => {
   const dispatch = useAppDispatch();
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoading, startLoading } = useLoading();
 
   const deleteBaseHandler = () => {
-    setIsLoading(true);
-    setTimeout(() => {
+    startLoading(() => {
       dispatch(deleteBase({ id: dialog.entityId ?? '' }));
       dispatch(closeDialog());
-      setIsLoading(false);
-    }, 1000);
+    });
   };
 
   return (
@@ -23,8 +22,10 @@ const BaseDeleteDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog }) 
         <Dialog.Title>Delete Base</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           Are you sure you want to delete{' '}
-          <span className="font-bold">{dialog.additionalOptions?.name && dialog.additionalOptions?.name}</span> base? This action
-          cannot be undone.
+          <span className="font-bold">
+            {dialog.additionalOptions?.name && dialog.additionalOptions?.name}
+          </span>{' '}
+          base? This action cannot be undone.
         </Dialog.Description>
 
         <Flex gap="3" mt="4" justify="end">

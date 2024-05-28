@@ -72,7 +72,7 @@ export default function SideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baseOrder]);
 
-  const handleReorderEnd = (newOrder: string[]) => {
+  const handleBaseReorderEnd = (newOrder: string[]) => {
     setBaseItemsOrder(newOrder);
     reorderBase(newOrder);
   };
@@ -145,7 +145,7 @@ export default function SideBar() {
                   <SidebarBaseMenuItem
                     key={id}
                     base={bases[id]}
-                    handleReorderEnd={() => handleReorderEnd(baseItemsOrder)}
+                    handleBaseReorderEnd={() => handleBaseReorderEnd(baseItemsOrder)}
                   />
                 );
               })}

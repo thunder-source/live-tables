@@ -4,21 +4,25 @@ import { DialogState, closeDialog } from '@/store/features/dialog';
 import { Button, Dialog, Flex, Text, TextField } from '@radix-ui/themes';
 import { createBase } from '@/store/features/sideBarBasesTables';
 import { generateBaseId, generateBaseName } from '@/utils';
+import useLoading from '@/hooks/useLoading';
 
 const BaseCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog }) => {
   const dispatch = useAppDispatch();
   const [nameInput, setNameInput] = useState('');
+  const { isLoading, startLoading } = useLoading();
 
-  const crateBaseReduxHandler = () => {
-    dispatch(
-      createBase({
-        id: generateBaseId(),
-        name: nameInput === '' ? generateBaseName() : nameInput,
-        tableOrder: [],
-        tables: {},
-      }),
-    );
-    dispatch(closeDialog());
+  const createBaseReduxHandler = () => {
+    startLoading(() => {
+      dispatch(
+        createBase({
+          id: generateBaseId(),
+          name: nameInput === '' ? generateBaseName() : nameInput,
+          tableOrder: [],
+          tables: {},
+        }),
+      );
+      dispatch(closeDialog());
+    });
   };
 
   return (
@@ -50,9 +54,9 @@ const BaseCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog }) 
               Cancel
             </Button>
           </Dialog.Close>
-          <Dialog.Close>
-            <Button onClick={crateBaseReduxHandler}>Save</Button>
-          </Dialog.Close>
+          <Button loading={isLoading} onClick={createBaseReduxHandler}>
+            Save
+          </Button>
         </Flex>
       </Dialog.Content>
     </Dialog.Root>

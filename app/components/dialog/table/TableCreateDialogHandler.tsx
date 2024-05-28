@@ -5,32 +5,36 @@ import { Button, Dialog, Flex, Text, TextField } from '@radix-ui/themes';
 import { createTable } from '@/store/features/sideBarBasesTables';
 import { generateTableId } from '@/utils';
 import toast from 'react-hot-toast';
+import useLoading from '@/hooks/useLoading';
 
 const TableCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog }) => {
   const dispatch = useAppDispatch();
   const [nameInput, setNameInput] = useState('');
   const { additionalOptions, entityId } = dialog;
+  const { isLoading, startLoading } = useLoading();
 
   const crateBaseReduxHandler = () => {
-    if (!entityId) {
-      toast.error('Please provide a valid base ID');
-      return;
-    }
-    if (!additionalOptions?.tableOrder) {
-      toast.error('Please provide a valid tableOrder in additionalOptions');
-      return;
-    }
-    dispatch(
-      createTable({
-        baseId: entityId,
-        table: {
-          id: generateTableId(),
-          name: nameInput === '' ? `Table ${additionalOptions.tableOrder.length + 1}` : nameInput,
-          config: {},
-        },
-      }),
-    );
-    dispatch(closeDialog());
+    startLoading(() => {
+      if (!entityId) {
+        toast.error('Please provide a valid base ID');
+        return;
+      }
+      if (!additionalOptions?.tableOrder) {
+        toast.error('Please provide a valid tableOrder in additionalOptions');
+        return;
+      }
+      dispatch(
+        createTable({
+          baseId: entityId,
+          table: {
+            id: generateTableId(),
+            name: nameInput === '' ? `Table ${additionalOptions.tableOrder.length + 1}` : nameInput,
+            config: {},
+          },
+        }),
+      );
+      dispatch(closeDialog());
+    });
   };
 
   return (
@@ -62,9 +66,7 @@ const TableCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog })
               Cancel
             </Button>
           </Dialog.Close>
-          <Dialog.Close>
-            <Button onClick={crateBaseReduxHandler}>Save</Button>
-          </Dialog.Close>
+          <Button loading={isLoading} onClick={crateBaseReduxHandler}>Save</Button>
         </Flex>
       </Dialog.Content>
     </Dialog.Root>

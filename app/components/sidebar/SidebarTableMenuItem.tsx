@@ -5,14 +5,17 @@ import { MenuItem } from 'react-pro-sidebar';
 import { usePathname, useRouter } from 'next/navigation';
 import SidebarTableContextMenu from '../contextMenu/SidebarTableContextMenu';
 import { TbTable, TbTableFilled } from 'react-icons/tb';
+import { TableConfig } from '@/types';
 
-export type SidebarTableMenuItemProps = {
-  name: string;
-  id: string;
-  config: {};
-};
-
-export default function SidebarTableMenuItem({ table }: { table: SidebarTableMenuItemProps }) {
+export default function SidebarTableMenuItem({
+  baseId,
+  table,
+  handleTableReorderEnd,
+}: {
+  baseId: string;
+  handleTableReorderEnd: () => void;
+  table: TableConfig;
+}) {
   const { name, id } = table;
   const [isDragging, setIsDragging] = useState(false);
   const y = useMotionValue(0);
@@ -29,7 +32,7 @@ export default function SidebarTableMenuItem({ table }: { table: SidebarTableMen
         // Prevent navigation and allow default context menu behavior
         if (e.button !== 2) {
           if (!isDragging) {
-            router.push(id, { scroll: false });
+            // router.push(id, { scroll: false });
           }
           setIsDragging(false);
         }
@@ -42,8 +45,9 @@ export default function SidebarTableMenuItem({ table }: { table: SidebarTableMen
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0 }}
+      onDragEnd={handleTableReorderEnd}
     >
-      <SidebarTableContextMenu>
+      <SidebarTableContextMenu baseId={baseId} table={table}>
         <MenuItem
           className={`${pathName === id && 'bg-accent-a4'} truncate capitalize`}
           icon={
