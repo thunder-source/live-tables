@@ -3,9 +3,9 @@ import { useMotionValue, Reorder } from 'framer-motion';
 import { useRaisedShadow } from '@/hooks/use-raised-shadow';
 import { MenuItem } from 'react-pro-sidebar';
 import { usePathname, useRouter } from 'next/navigation';
-import SidebarTableContextMenu from '../contextMenu/SidebarTableContextMenu';
 import { TbTable, TbTableFilled } from 'react-icons/tb';
 import { TableConfig } from '@/types';
+import TableDropDownMenu from '../dropdown/TableDropDownMenu';
 
 export default function SidebarTableMenuItem({
   baseId,
@@ -24,6 +24,7 @@ export default function SidebarTableMenuItem({
   const pathName = usePathname();
   const router = useRouter();
 
+  console.log("contextMenuOpen", contextMenuOpen)
   const handlePointerUp = (e: React.PointerEvent<any>) => {
     // Prevent navigation on right-click and when dragging
     if (e.button !== 2 && !isDragging && !contextMenuOpen) {
@@ -32,8 +33,17 @@ export default function SidebarTableMenuItem({
     setIsDragging(false);
   };
 
-  const handleContextMenuOpen = (e: React.MouseEvent<any, MouseEvent>) => {
-    e.preventDefault();
+  const handlePointerDown = (e: React.PointerEvent<any>) => {
+    if (e.button !== 2) {
+      setIsDragging(false);
+    }
+  };
+
+  const handlePointerMove = () => {
+    setIsDragging(true);
+  };
+
+  const handleContextMenuOpen = () => {
     setContextMenuOpen(true);
   };
 
@@ -43,10 +53,9 @@ export default function SidebarTableMenuItem({
 
   return (
     <Reorder.Item
-      onPointerDown={() => setIsDragging(false)}
-      onPointerMove={() => setIsDragging(true)}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      onContextMenu={handleContextMenuOpen}
       as="div"
       className="relative z-50"
       value={id}
@@ -57,11 +66,19 @@ export default function SidebarTableMenuItem({
       transition={{ duration: 0 }}
       onDragEnd={handleTableReorderEnd}
     >
-      <SidebarTableContextMenu baseId={baseId} table={table} onClose={handleContextMenuClose}>
+      <TableDropDownMenu
+        isOpen={contextMenuOpen}
+        side="right"
+        baseId={baseId}
+        table={table}
+        onClose={handleContextMenuClose}
+        onOpen={handleContextMenuOpen}
+        disableOnClick
+      >
         <MenuItem
-          className={`${pathName === id && 'bg-accent-a4'} truncate capitalize`}
+          className={`${pathName.includes(id) && 'bg-accent-a4 '} truncate capitalize`}
           icon={
-            pathName === id ? (
+            pathName.includes(id) ? (
               <TbTableFilled className="h-7 w-7" />
             ) : (
               <TbTable className="h-[25px] w-[25px]" />
@@ -70,7 +87,7 @@ export default function SidebarTableMenuItem({
         >
           {name}
         </MenuItem>
-      </SidebarTableContextMenu>
+      </TableDropDownMenu>
     </Reorder.Item>
   );
 }

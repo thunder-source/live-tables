@@ -27,5 +27,7 @@ export const {
   deleteTable,
   updateBaseOrder,
   updateTableOrder,
+  deleteAllBases,
+  deleteAllTables,
 } = configSlice.actions;
 export default configSlice.reducer;

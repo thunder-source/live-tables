@@ -4,7 +4,6 @@ import './styles/globals.css';
 // import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Theme, ThemePanel } from '@radix-ui/themes';
-import SideBar from './layout/Sidebar';
 import { ThemeProvider } from 'next-themes';
 import { persistor, store } from '@/store/app';
 import { Provider } from 'react-redux';
@@ -12,6 +11,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import SimpleTextLoading from './layout/SimpleTextLoading';
 import { Toaster } from 'react-hot-toast';
 import DialogHandler from '@/components/dialog/DialogHandler';
+import DynamicLayout from './DynamicLayout';
 const inter = Inter({ subsets: ['latin'] });
 
 // export const metadata: Metadata = {
@@ -32,10 +32,7 @@ export default function RootLayout({
             <ThemeProvider attribute="class">
               <Theme accentColor="blue" grayColor="sand" radius="large" scaling="95%">
                 <Toaster position="bottom-right" />
-                <div className="flex h-screen w-screen">
-                  <SideBar />
-                  {children}
-                </div>
+                <DynamicLayout>{children}</DynamicLayout>
                 <DialogHandler />
                 <ThemePanel />
               </Theme>

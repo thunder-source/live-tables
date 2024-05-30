@@ -9,6 +9,8 @@ import {
   deleteTable,
   updateBaseOrder,
   updateTableOrder,
+  deleteAllBases as deleteAllBasesAction, // Rename import to avoid conflicts
+  deleteAllTables as deleteAllTablesAction, // Rename import to avoid conflicts
 } from '@/store/features/sideBarBasesTables';
 import { RootState } from '@/store/app';
 import { BaseConfig, TableConfig, BaseConfigSchema, TableConfigSchema } from '@/types';
@@ -29,6 +31,8 @@ const SidebarBaseTable: React.FC = () => {
   });
   const [tableForm, setTableForm] = useState<TableConfig>({ id: '', name: '', config: {} });
   const [selectedBaseId, setSelectedBaseId] = useState<string>('');
+  const [numBases, setNumBases] = useState<number>(0);
+  const [numTables, setNumTables] = useState<number>(0);
 
   const handleBaseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -102,6 +106,32 @@ const SidebarBaseTable: React.FC = () => {
     dispatch(deleteTable({ baseId, tableId }));
   };
 
+  const handleCreateBasesTablesByNumber = (baseNo: number, tableNo: number) => {
+    for (let i = 0; i < baseNo; i++) {
+      const baseId = generateBaseId();
+      const baseName = generateBaseName();
+      const base: BaseConfig = {
+        id: baseId,
+        name: baseName,
+        tables: {},
+        tableOrder: [],
+      };
+      dispatch(createBase(base));
+
+      for (let j = 0; j < tableNo; j++) {
+        const tableId = generateTableId();
+        const tableName = generateTableName();
+        const table: TableConfig = {
+          id: tableId,
+          name: tableName,
+          config: {},
+        };
+        dispatch(createTable({ baseId, table }));
+      }
+    }
+    toast.success(`${baseNo} Bases and ${tableNo} Tables created`);
+  };
+
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
 
@@ -121,34 +151,99 @@ const SidebarBaseTable: React.FC = () => {
     }
   };
 
+  // Function to delete all tables
+  const deleteAllTables = () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete all tables?');
+    if (confirmDelete) {
+      const selectedBase = bases[selectedBaseId];
+      if (selectedBase) {
+        // Dispatch action to delete all tables for the selected base
+        dispatch(deleteAllTablesAction({ baseId: selectedBaseId }));
+        toast.success('All tables deleted successfully');
+      } else {
+        toast.error('Please select a base first');
+      }
+    }
+  };
+
+  // Function to delete all bases
+  const deleteAllBases = () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete all bases?');
+    if (confirmDelete) {
+      // Dispatch action to delete all bases
+      dispatch(deleteAllBasesAction());
+      toast.success('All bases deleted successfully');
+    }
+  };
+
+  // Function to add bases by number
+  const addBasesByNumber = (numBases: number) => {
+    for (let i = 0; i < numBases; i++) {
+      const baseId = generateBaseId();
+      const baseName = generateBaseName();
+      const base: BaseConfig = {
+        id: baseId,
+        name: baseName,
+        tables: {},
+        tableOrder: [],
+      };
+      dispatch(createBase(base));
+    }
+    toast.success(`${numBases} bases added successfully`);
+  };
+
+  // Function to add tables by number
+  const addTablesByNumber = (numTables: number) => {
+    const selectedBase = bases[selectedBaseId];
+    if (selectedBase) {
+      for (let i = 0; i < numTables; i++) {
+        const tableId = generateTableId();
+        const tableName = generateTableName();
+        const table: TableConfig = {
+          id: tableId,
+          name: tableName,
+          config: {},
+        };
+        dispatch(createTable({ baseId: selectedBaseId, table }));
+      }
+      toast.success(`${numTables} tables added successfully`);
+    } else {
+      toast.error('Please select a base first');
+    }
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="h-screen overflow-auto p-4">
         <div className="mb-4">
           <h2 className="text-xl font-bold">Base Configuration</h2>
           <div className="flex flex-wrap gap-2">
-            <input
-              type="text"
-              name="id"
-              value={baseForm.id}
-              onChange={handleBaseChange}
-              placeholder="Base ID"
-              className="flex-grow border p-2"
-            />
-            <button onClick={handleGenerateBaseId} className="bg-gray-500 px-4 py-2 text-white">
-              Generate Base ID
-            </button>
-            <input
-              type="text"
-              name="name"
-              value={baseForm.name}
-              onChange={handleBaseChange}
-              placeholder="Base Name"
-              className="flex-grow border p-2"
-            />
-            <button onClick={handleGenerateBaseName} className="bg-gray-500 px-4 py-2 text-white">
-              Generate Base Name
-            </button>
+            <div className="flex w-full gap-2">
+              <input
+                type="text"
+                name="id"
+                value={baseForm.id}
+                onChange={handleBaseChange}
+                placeholder="Base ID"
+                className="flex-grow border p-2"
+              />
+              <button onClick={handleGenerateBaseId} className="bg-gray-500 px-4 py-2 text-white">
+                Generate Base ID
+              </button>
+            </div>
+            <div className="flex w-full gap-2">
+              <input
+                type="text"
+                name="name"
+                value={baseForm.name}
+                onChange={handleBaseChange}
+                placeholder="Base Name"
+                className="flex-grow border p-2"
+              />
+              <button onClick={handleGenerateBaseName} className="bg-gray-500 px-4 py-2 text-white">
+                Generate Base Name
+              </button>
+            </div>
             <button onClick={handleAddBase} className="bg-blue-500 px-4 py-2 text-white">
               Add Base
             </button>
@@ -161,28 +256,35 @@ const SidebarBaseTable: React.FC = () => {
         <div className="mb-4">
           <h2 className="text-xl font-bold">Table Configuration</h2>
           <div className="flex flex-wrap gap-2">
-            <input
-              type="text"
-              name="id"
-              value={tableForm.id}
-              onChange={handleTableChange}
-              placeholder="Table ID"
-              className="flex-grow border p-2"
-            />
-            <button onClick={handleGenerateTableId} className="bg-gray-500 px-4 py-2 text-white">
-              Generate Table ID
-            </button>
-            <input
-              type="text"
-              name="name"
-              value={tableForm.name}
-              onChange={handleTableChange}
-              placeholder="Table Name"
-              className="flex-grow border p-2"
-            />
-            <button onClick={handleGenerateTableName} className="bg-gray-500 px-4 py-2 text-white">
-              Generate Table Name
-            </button>
+            <div className="flex w-full gap-2">
+              <input
+                type="text"
+                name="id"
+                value={tableForm.id}
+                onChange={handleTableChange}
+                placeholder="Table ID"
+                className="flex-grow border p-2"
+              />
+              <button onClick={handleGenerateTableId} className="bg-gray-500 px-4 py-2 text-white">
+                Generate Table ID
+              </button>
+            </div>
+            <div className="flex w-full gap-2">
+              <input
+                type="text"
+                name="name"
+                value={tableForm.name}
+                onChange={handleTableChange}
+                placeholder="Table Name"
+                className="flex-grow border p-2"
+              />
+              <button
+                onClick={handleGenerateTableName}
+                className="bg-gray-500 px-4 py-2 text-white"
+              >
+                Generate Table Name
+              </button>
+            </div>
             <input
               type="text"
               name="config"
@@ -215,6 +317,90 @@ const SidebarBaseTable: React.FC = () => {
               Update Table
             </button>
           </div>
+        </div>
+
+        <div className="mb-4 flex flex-col gap-4 bg-red-800/50 p-4">
+          <h2 className="text-xl font-bold">Table Tools</h2>
+          <div className=" flex flex-wrap items-center gap-4 overflow-auto p-4">
+            <div className="mb-4">
+              <select
+                onChange={(e) => setSelectedBaseId(e.target.value)}
+                value={selectedBaseId}
+                className="flex-grow border p-2"
+              >
+                <option value="">Select Base</option>
+                {Object.keys(bases).map((baseId) => (
+                  <option key={baseId} value={baseId}>
+                    {bases[baseId].name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-4">
+              <button onClick={deleteAllTables} className="bg-red-500 px-4 py-2 text-white">
+                Delete All Tables
+              </button>
+            </div>
+
+            {/* Delete all bases button */}
+            <div className="mb-4">
+              <button onClick={deleteAllBases} className="bg-red-500 px-4 py-2 text-white">
+                Delete All Bases
+              </button>
+            </div>
+
+            {/* Add bases by number */}
+            <div className="mb-4">
+              <input
+                type="number"
+                placeholder="Number of bases"
+                value={numBases}
+                onChange={(e) => setNumBases(parseInt(e.target.value))}
+                className="flex-grow border p-2"
+              />
+              <button
+                onClick={() => addBasesByNumber(numBases)}
+                className="bg-green-500 px-4 py-2 text-white"
+              >
+                Add Bases
+              </button>
+            </div>
+
+            {/* Add tables by number */}
+            <div className="mb-4">
+              <input
+                type="number"
+                placeholder="Number of tables"
+                value={numTables}
+                onChange={(e) => setNumTables(parseInt(e.target.value))}
+                className="flex-grow border p-2"
+              />
+              <button
+                onClick={() => addTablesByNumber(numTables)}
+                className="bg-green-500 px-4 py-2 text-white"
+              >
+                Add Tables
+              </button>
+            </div>
+          </div>
+          <button
+            onClick={() => handleCreateBasesTablesByNumber(5, 10)}
+            className="bg-purple-500 px-4 py-2 text-white"
+          >
+            Create 5 Bases and 10 Tables
+          </button>
+          <button
+            onClick={() => handleCreateBasesTablesByNumber(5, 100)}
+            className="bg-purple-500 px-4 py-2 text-white"
+          >
+            Create 5 Bases and 100 Tables
+          </button>
+          <button
+            onClick={() => handleCreateBasesTablesByNumber(5, 50)}
+            className="bg-purple-500 px-4 py-2 text-white"
+          >
+            Create 5 Bases and 50 Tables
+          </button>
         </div>
 
         <Droppable droppableId="base-list" type="BASE">
