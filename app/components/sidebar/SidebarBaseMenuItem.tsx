@@ -5,12 +5,12 @@ import { MenuItem, SubMenu } from 'react-pro-sidebar';
 import { GoDatabase } from 'react-icons/go';
 import SidebarTableMenuItem from './SidebarTableMenuItem';
 import { TbTablePlus } from 'react-icons/tb';
-import SidebarBaseContextMenu from '../contextMenu/SidebarBaseContextMenu';
 import { useAppDispatch } from '@/hooks/reduxHandlers';
 import { openDialog } from '@/store/features/dialog';
 import debounce from '@/utils/debounce';
 import { updateTableOrder } from '@/store/features/sideBarBasesTables';
 import { BaseConfig } from '@/types';
+import BaseDropDownMenu from '../dropdown/BaseDropDownMenu';
 
 type Props = {
   base: BaseConfig;
@@ -38,7 +38,7 @@ export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Prop
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const reorderTable = useCallback(
     debounce((newOrder: string[]) => {
-      console.log('update tables order', newOrder);
+      // console.log('update tables order', newOrder);
       dispatch(updateTableOrder({ baseId: id, tableOrder: newOrder }));
     }, 500),
     [tableItemsOrder],
@@ -72,7 +72,7 @@ export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Prop
       animate={{ opacity: 1 }}
       transition={{ duration: 0 }}
     >
-      <SidebarBaseContextMenu base={base}>
+      <BaseDropDownMenu align="start" side="right" base={base} disableOnClick={true}>
         <SubMenu
           icon={<GoDatabase size={25} />}
           open={isOpen}
@@ -80,30 +80,36 @@ export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Prop
           onClick={() => {
             if (!isDragging) setIsOpen(!isOpen);
           }}
-          onPointerDown={(e) => controls.start(e)}
-          className="overflow-hidden truncate"
+          onPointerDown={(e) => {
+            if (e.button === 0) controls.start(e); // Only start drag on left click
+          }}
+          className=" truncate"
         >
-          <Reorder.Group
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0 }}
-            onReorder={setTableItemsOrder}
-            values={tableItemsOrder}
-          >
-            {tableItemsOrder.map((id: string) => {
-              if (!tables[id]) return null;
-              return (
-                <SidebarTableMenuItem
-                  baseId={base.id}
-                  key={id}
-                  table={tables[id]}
-                  handleTableReorderEnd={() => handleTableReorderEnd(tableItemsOrder)}
-                />
-              );
-            })}
-          </Reorder.Group>
+          {isOpen && (
+            <Reorder.Group
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0 }}
+              onReorder={setTableItemsOrder}
+              values={tableItemsOrder}
+            >
+              {tableItemsOrder.map((id: string) => {
+                if (!tables[id]) return null;
+                return (
+                  <SidebarTableMenuItem
+                    baseId={base.id}
+                    key={id}
+                    table={tables[id]}
+                    handleTableReorderEnd={() => handleTableReorderEnd(tableItemsOrder)}
+                  />
+                );
+              })}
+            </Reorder.Group>
+          )}
           <MenuItem
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               dispatch(
                 openDialog({
                   actionType: 'CREATE',
@@ -113,6 +119,10 @@ export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Prop
                 }),
               );
             }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
             className="select-none "
             icon={<TbTablePlus size={25} />}
           >
@@ -120,7 +130,7 @@ export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Prop
             Create Table
           </MenuItem>
         </SubMenu>
-      </SidebarBaseContextMenu>
+      </BaseDropDownMenu>
     </Reorder.Item>
   );
 }

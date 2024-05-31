@@ -33,3 +33,8 @@ export const deleteBase = (state: ConfigState, action: PayloadAction<{ id: strin
 export const updateBaseOrder = (state: ConfigState, action: PayloadAction<string[]>) => {
   state.baseOrder = action.payload;
 };
+
+export const deleteAllBases = (state: ConfigState) => {
+  state.bases = {};
+  state.baseOrder = [];
+};

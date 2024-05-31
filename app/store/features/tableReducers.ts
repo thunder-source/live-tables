@@ -42,3 +42,11 @@ export const updateTableOrder = (
     state.bases[baseId].tableOrder = tableOrder;
   }
 };
+
+export const deleteAllTables = (state: ConfigState, action: PayloadAction<{ baseId: string }>) => {
+  const { baseId } = action.payload;
+  if (state.bases[baseId]) {
+    state.bases[baseId].tables = {};
+    state.bases[baseId].tableOrder = [];
+  }
+};
