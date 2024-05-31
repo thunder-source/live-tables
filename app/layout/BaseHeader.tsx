@@ -1,30 +1,26 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHandlers';
 import { toggleSideBar } from '@/store/features/mainState';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
-import { Avatar, IconButton } from '@radix-ui/themes';
+import { Avatar, IconButton, Spinner } from '@radix-ui/themes';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { TbLayoutSidebarLeftExpand, TbLayoutSidebarLeftCollapse } from 'react-icons/tb';
 import HeaderTableNavigationMenu from '@/components/layout/base/HeaderTableNavigationMenu';
 import { useParams } from 'next/navigation';
-import { BaseConfig } from '@/types';
 
 export default function BaseHeader() {
+  const { bases } = useAppSelector((state) => state.sidebar);
+  const { sidebar } = useAppSelector((state) => state.mainState);
   const dispatch = useAppDispatch();
   const param = useParams();
-  const { sidebar } = useAppSelector((state) => state.mainState);
-  const { bases } = useAppSelector((state) => state.sidebar);
-  const [activeBase, setActiveBase] = useState<BaseConfig | null>(null);
-
-  useEffect(() => {
-    if (typeof param.baseId === 'string' && bases) {
-      setActiveBase(bases[param.baseId]);
-    }
-  }, [bases, param]);
+  let activeBase = null;
+  if (typeof param?.baseId === 'string') {
+    activeBase = bases[param.baseId];
+  }
 
   return (
-    <header className={clsx(' w-full bg-accent-a3')}>
-      <div className="flex items-center justify-between bg-accent-a3 p-4">
+    <header className={clsx(' w-full bg-accent-a6')}>
+      <div className="flex items-center justify-between  p-3 px-4">
         <div className="left flex items-center gap-4">
           <IconButton
             onClick={() => {
@@ -43,6 +39,10 @@ export default function BaseHeader() {
           <h4 className="max-w-96 font-bold ">{activeBase?.name} </h4>
         </div>
         <div className="right flex items-center gap-4">
+          <div className="mr-8 flex items-center gap-2">
+            <Spinner />
+            <h6 className="text-sm text-gray-11">All changes Saved</h6>
+          </div>
           <IconButton size="3" variant="soft" className="rounded-full">
             <IoIosNotificationsOutline size={25} />
           </IconButton>

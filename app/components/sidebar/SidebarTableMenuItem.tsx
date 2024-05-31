@@ -24,7 +24,6 @@ export default function SidebarTableMenuItem({
   const pathName = usePathname();
   const router = useRouter();
 
-  console.log("contextMenuOpen", contextMenuOpen)
   const handlePointerUp = (e: React.PointerEvent<any>) => {
     // Prevent navigation on right-click and when dragging
     if (e.button !== 2 && !isDragging && !contextMenuOpen) {

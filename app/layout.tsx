@@ -30,7 +30,7 @@ export default function RootLayout({
         <Provider store={store}>
           <PersistGate loading={<SimpleTextLoading />} persistor={persistor}>
             <ThemeProvider attribute="class">
-              <Theme accentColor="blue" grayColor="sand" radius="large" scaling="95%">
+              <Theme accentColor="gold" grayColor="sand" radius="large" scaling="95%">
                 <Toaster position="bottom-right" />
                 <DynamicLayout>{children}</DynamicLayout>
                 <DialogHandler />

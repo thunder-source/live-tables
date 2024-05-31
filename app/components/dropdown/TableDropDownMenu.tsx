@@ -9,7 +9,9 @@ type Props = {
   table: TableConfig;
   baseId: string;
   disableOnClick?: boolean;
+  openMenuOnSelected?: boolean;
   isOpen?: boolean;
+  forcedClosedLeftClick?: boolean;
   onClose?: () => void;
   onOpen?: () => void;
   align?: 'center' | 'end' | 'start' | undefined;
@@ -17,7 +19,18 @@ type Props = {
 };
 
 export default function TableDropDownMenu(Props: Props) {
-  const { children, table, baseId, disableOnClick = false, onClose, onOpen, align = 'start', side = 'bottom' } = Props;
+  const {
+    children,
+    table,
+    baseId,
+    disableOnClick = false,
+    forcedClosedLeftClick = false,
+    openMenuOnSelected = false,
+    onClose,
+    onOpen,
+    align = 'start',
+    side = 'bottom',
+  } = Props;
   const [isOpen, setIsOpen] = useState(Props.isOpen);
   const dispatch = useAppDispatch();
 
@@ -31,7 +44,7 @@ export default function TableDropDownMenu(Props: Props) {
       }),
     );
     setIsOpen(false);
-    onClose?.()
+    onClose?.();
   };
   const renameBaseHandler = () => {
     dispatch(
@@ -43,10 +56,17 @@ export default function TableDropDownMenu(Props: Props) {
       }),
     );
     setIsOpen(false);
-    onClose?.()
+    onClose?.();
   };
 
   const handlePointerDown = (event: React.PointerEvent) => {
+    if (forcedClosedLeftClick) {
+      event.preventDefault();
+      setIsOpen(false);
+    }
+    if (openMenuOnSelected) {
+      return;
+    }
     if (disableOnClick && event.button === 0) {
       event.preventDefault();
     }
@@ -54,8 +74,8 @@ export default function TableDropDownMenu(Props: Props) {
 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
-    event.stopPropagation()
-    onOpen?.()
+    event.stopPropagation();
+    onOpen?.();
     setIsOpen(true);
   };
 
@@ -66,18 +86,28 @@ export default function TableDropDownMenu(Props: Props) {
       onOpenChange={(e) => {
         setIsOpen(e);
         if (e) {
-          onOpen?.()
+          onOpen?.();
         } else {
           onClose?.();
         }
       }}
     >
       <DropdownMenu.Trigger>
-        <div className={`${isOpen && 'bg-accent-6'}`} onPointerDown={handlePointerDown} onContextMenu={handleContextMenu}>
+        <div
+          className={`${isOpen && 'bg-accent-a3'}`}
+          onPointerDown={handlePointerDown}
+          onContextMenu={handleContextMenu}
+        >
           {children}
         </div>
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content onContextMenu={handleContextMenu} align={align} side={side} variant="soft" className="w-52">
+      <DropdownMenu.Content
+        onContextMenu={handleContextMenu}
+        align={align}
+        side={side}
+        variant="soft"
+        className="w-52"
+      >
         <DropdownMenu.Item onClick={renameBaseHandler} shortcut="⌘ E">
           Rename
         </DropdownMenu.Item>

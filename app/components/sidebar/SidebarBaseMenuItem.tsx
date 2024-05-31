@@ -119,7 +119,10 @@ export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Prop
                 }),
               );
             }}
-            onContextMenu={(e) => { e.preventDefault(); e.stopPropagation() }}
+            onContextMenu={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
             className="select-none "
             icon={<TbTablePlus size={25} />}
           >
