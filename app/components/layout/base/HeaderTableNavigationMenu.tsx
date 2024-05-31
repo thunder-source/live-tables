@@ -24,7 +24,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
     debounce((newOrder: string[]) => {
       dispatch(updateTableOrder({ baseId: id, tableOrder: newOrder }));
     }, 500),
-    [dispatch, id]
+    [dispatch, id],
   );
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
 
   return (
     <div className="flex gap-2">
-      <div className="flex overflow-hidden rounded-md bg-accent-a3 relative">
+      <div className="relative flex overflow-hidden rounded-md bg-accent-a3">
         <div className="relative flex overflow-hidden rounded-md px-2">
           <AnimatePresence>
             {!atLeftmost && (
@@ -88,9 +88,12 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
                 animate={{ opacity: 1, left: 0 }}
                 exit={{ opacity: 0, left: -100 }}
                 transition={{ duration: 0.5 }}
-                className="left-0 z-50 min-w-10 absolute h-11"
+                className="absolute left-0 z-50 h-11 min-w-10"
               >
-                <Button onClick={scrollLeft} className="cursor-pointer bg-accent-8 rounded-none h-full">
+                <Button
+                  onClick={scrollLeft}
+                  className="h-full cursor-pointer rounded-none bg-accent-8"
+                >
                   <FaChevronLeft size={15} />
                 </Button>
               </motion.div>
@@ -128,20 +131,23 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
                 animate={{ opacity: 1, right: 0 }}
                 exit={{ opacity: 0, right: -50 }}
                 transition={{ duration: 0.5 }}
-                className="right-0 z-40 min-w-10 absolute h-11"
+                className="absolute right-0 z-40 h-11 min-w-10"
               >
-                <Button onClick={scrollRight} className="cursor-pointer bg-accent-8 rounded-none h-full">
+                <Button
+                  onClick={scrollRight}
+                  className="h-full cursor-pointer rounded-none bg-accent-8"
+                >
                   <FaChevronRight size={15} />
                 </Button>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-        <TableSearchListDropDown base={base} align='end'>
+        <TableSearchListDropDown base={base} align="end">
           <Button
             variant="soft"
             size="3"
-            className="h-full cursor-pointer bg-accent-a1 hover:bg-accent-a3 relative z-50"
+            className="relative z-50 h-full cursor-pointer bg-accent-a1 hover:bg-accent-a3"
           >
             <FaChevronDown size={15} />
           </Button>
@@ -159,7 +165,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
               }),
             );
           }}
-          className="h-full min-w-20 cursor-pointer bg-accent-a1 hover:bg-accent-a3 relative z-50"
+          className="relative z-50 h-full min-w-20 cursor-pointer bg-accent-a1 hover:bg-accent-a3"
         >
           <TbTablePlus size={20} /> Create Table
         </Button>

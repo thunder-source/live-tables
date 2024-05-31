@@ -12,7 +12,7 @@ type Props = {
   handleTableReorderEnd: () => void;
   table: TableConfig;
   baseId: string;
-  listRef: React.RefObject<HTMLDivElement>
+  listRef: React.RefObject<HTMLDivElement>;
 };
 
 export default function TableNavigationButton({ baseId, table, handleTableReorderEnd }: Props) {
@@ -25,8 +25,6 @@ export default function TableNavigationButton({ baseId, table, handleTableReorde
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const itemRef = useRef<HTMLDivElement>(null);
-
-
 
   const handlePointerUp = (e: React.PointerEvent<any>) => {
     // Prevent navigation on right-click and when dragging
@@ -79,7 +77,6 @@ export default function TableNavigationButton({ baseId, table, handleTableReorde
       // itemRef.current && itemRef.current.scrollTo(parseInt(scrollPosition, 10), 0);
       // }
       itemRef.current && itemRef.current.scrollIntoView({ behavior: 'smooth', inline: 'center' });
-
     } else {
       setIsSelected(false);
     }
@@ -118,7 +115,7 @@ export default function TableNavigationButton({ baseId, table, handleTableReorde
       >
         <div
           className={clsx(
-            'group  relative flex cursor-pointer items-center text-sm  overflow-hidden truncate rounded-none rounded-tl-md rounded-tr-md px-2 py-0.5',
+            'group  relative flex cursor-pointer items-center overflow-hidden  truncate rounded-none rounded-tl-md rounded-tr-md px-2 py-0.5 text-sm',
             isDragging ? 'z-40 !bg-accent-8' : ' z-0 bg-accent-a1',
             isSelected ? 'z-40 !bg-accent-1' : 'z-20   hover:bg-accent-a3',
           )}
