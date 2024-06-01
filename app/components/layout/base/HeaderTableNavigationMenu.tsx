@@ -13,10 +13,12 @@ import TableSearchListDropDown from '@/components/dropdown/TableSearchListDropDo
 
 export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }) {
   const { id, tableOrder, tables } = base;
+  const isAtLeftmost = sessionStorage.getItem('AtLeftmost');
+  const isAtRightmost = sessionStorage.getItem('AtRightmost');
   const dispatch = useAppDispatch();
   const [tableItemsOrder, setTableItemsOrder] = useState(tableOrder);
-  const [atLeftmost, setAtLeftmost] = useState(true);
-  const [atRightmost, setAtRightmost] = useState(false);
+  const [atLeftmost, setAtLeftmost] = useState(isAtLeftmost == 'true' ? false : true);
+  const [atRightmost, setAtRightmost] = useState(isAtRightmost == 'true' ? false : true);
   const listRef = useRef<HTMLDivElement>(null);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,7 +33,8 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
     if (tableOrder !== tableItemsOrder) {
       setTableItemsOrder(tableOrder);
     }
-  }, [tableOrder, tableItemsOrder]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableOrder]);
 
   const handleTableReorderEnd = (newOrder: string[]) => {
     setTableItemsOrder(newOrder);
@@ -62,6 +65,8 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
       setAtLeftmost(scrollLeft === 0);
       setAtRightmost(scrollLeft + clientWidth >= scrollWidth);
       sessionStorage.setItem('scrollPosition', scrollLeft.toString());
+      sessionStorage.setItem('AtLeftmost', (scrollLeft === 0).toString());
+      sessionStorage.setItem('AtRightmost', (scrollLeft + clientWidth >= scrollWidth).toString());
     }
   };
 
@@ -69,7 +74,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
     const currentListRef = listRef.current;
     if (currentListRef) {
       currentListRef.addEventListener('scroll', handleScroll);
-
+      handleScroll();
       return () => {
         currentListRef.removeEventListener('scroll', handleScroll);
       };
@@ -88,7 +93,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
                 animate={{ opacity: 1, left: 0 }}
                 exit={{ opacity: 0, left: -100 }}
                 transition={{ duration: 0.5 }}
-                className="absolute left-0 z-50 h-11 min-w-10"
+                className="absolute left-0 z-50 h-9 min-w-10"
               >
                 <Button
                   onClick={scrollLeft}
@@ -131,7 +136,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
                 animate={{ opacity: 1, right: 0 }}
                 exit={{ opacity: 0, right: -50 }}
                 transition={{ duration: 0.5 }}
-                className="absolute right-0 z-40 h-11 min-w-10"
+                className="absolute right-0 z-40 h-9 min-w-10"
               >
                 <Button
                   onClick={scrollRight}
@@ -143,7 +148,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
             )}
           </AnimatePresence>
         </div>
-        <TableSearchListDropDown base={base} align="end">
+        <TableSearchListDropDown base={base} align="start">
           <Button
             variant="soft"
             size="3"

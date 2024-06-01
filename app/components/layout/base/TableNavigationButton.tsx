@@ -115,7 +115,7 @@ export default function TableNavigationButton({ baseId, table, handleTableReorde
       >
         <div
           className={clsx(
-            'group  relative flex cursor-pointer items-center overflow-hidden  truncate rounded-none rounded-tl-md rounded-tr-md px-2 py-0.5 text-sm',
+            'group  relative flex cursor-pointer items-center overflow-hidden  truncate rounded-none rounded-tl-md rounded-tr-md px-2 py-0 text-sm',
             isDragging ? 'z-40 !bg-accent-8' : ' z-0 bg-accent-a1',
             isSelected ? 'z-40 !bg-accent-1' : 'z-20   hover:bg-accent-a3',
           )}
