@@ -25,3 +25,39 @@
     scrollbar-width: none; /* Firefox */
   }
 }
+
+/* table css */
+.ag-status-bar {
+  padding: 0 !important;
+  background: var(--accent-1);
+}
+.ag-root-wrapper,
+.ag-body-viewport {
+  border-radius: 0 !important;
+  background: var(--accent-a1) !important;
+}
+.ag-header,
+.ag-header-row,
+.ag-header-cell,
+.ag-header-container {
+  height: 40px !important;
+}
+.ag-header,
+.ag-header-row {
+  height: 40px !important;
+  background: var(--gray-a3) !important;
+  color: var(--accent-a12) !important;
+}
+
+.ag-row {
+  background: var(--accent-a1) !important;
+  color: var(--accent-a12) !important;
+}
+
+.ag-theme-quartz {
+  --ag-header-height: 25px;
+  --ag-header-foreground-color: white;
+  --ag-header-background-color: var(--accent-a12);
+  --ag-header-cell-hover-background-color: rgb(80, 40, 140);
+  --ag-header-cell-moving-background-color: rgb(80, 40, 140);
+}

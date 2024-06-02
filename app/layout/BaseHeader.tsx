@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/reduxHandlers';
 import { toggleSideBar } from '@/store/features/mainState';
 import React from 'react';
 import clsx from 'clsx';
-import { Avatar, IconButton, Spinner } from '@radix-ui/themes';
+import { Avatar, IconButton, Spinner, Tooltip } from '@radix-ui/themes';
 import { IoIosNotificationsOutline } from 'react-icons/io';
 import { TbLayoutSidebarLeftExpand, TbLayoutSidebarLeftCollapse } from 'react-icons/tb';
 import HeaderTableNavigationMenu from '@/components/layout/base/HeaderTableNavigationMenu';
@@ -43,14 +43,18 @@ export default function BaseHeader() {
             <Spinner />
             <h6 className="text-sm text-gray-11">All changes Saved</h6>
           </div>
-          <IconButton size="3" variant="soft" className="rounded-full">
-            <IoIosNotificationsOutline size={25} />
-          </IconButton>
-          <Avatar
-            src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?&w=256&h=256&q=70&crop=focalpoint&fp-x=0.5&fp-y=0.3&fp-z=1&fit=crop"
-            fallback="A"
-            className="h-10 w-10 rounded-full transition-all duration-500"
-          />
+          <Tooltip content="Notification">
+            <IconButton size="3" variant="soft" className="rounded-full">
+              <IoIosNotificationsOutline size={25} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip content="Account">
+            <Avatar
+              src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?&w=256&h=256&q=70&crop=focalpoint&fp-x=0.5&fp-y=0.3&fp-z=1&fit=crop"
+              fallback="A"
+              className="h-10 w-10 rounded-full transition-all duration-500"
+            />
+          </Tooltip>
         </div>
       </div>
       {activeBase && <HeaderTableNavigationMenu base={activeBase} />}

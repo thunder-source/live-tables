@@ -6,3 +6,6 @@ const generateUniqueId = (prefix: string): string => {
 
 export const generateBaseId = (): string => generateUniqueId('base');
 export const generateTableId = (): string => generateUniqueId('table');
+export const generateColumnId = (): string => generateUniqueId('column');
+export const generateRowId = (): string => generateUniqueId('row');
+export const generateCellId = (): string => generateUniqueId('cell');

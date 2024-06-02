@@ -85,27 +85,27 @@ export default function SidebarBaseMenuItem({ base, handleBaseReorderEnd }: Prop
           }}
           className=" truncate"
         >
-          {isOpen && (
-            <Reorder.Group
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0 }}
-              onReorder={setTableItemsOrder}
-              values={tableItemsOrder}
-            >
-              {tableItemsOrder.map((id: string) => {
-                if (!tables[id]) return null;
-                return (
-                  <SidebarTableMenuItem
-                    baseId={base.id}
-                    key={id}
-                    table={tables[id]}
-                    handleTableReorderEnd={() => handleTableReorderEnd(tableItemsOrder)}
-                  />
-                );
-              })}
-            </Reorder.Group>
-          )}
+          {/* {isOpen && ( */}
+          <Reorder.Group
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0 }}
+            onReorder={setTableItemsOrder}
+            values={tableItemsOrder}
+          >
+            {tableItemsOrder.map((id: string) => {
+              if (!tables[id]) return null;
+              return (
+                <SidebarTableMenuItem
+                  baseId={base.id}
+                  key={id}
+                  table={tables[id]}
+                  handleTableReorderEnd={() => handleTableReorderEnd(tableItemsOrder)}
+                />
+              );
+            })}
+          </Reorder.Group>
+          {/* )} */}
           <MenuItem
             onClick={(e) => {
               e.preventDefault();

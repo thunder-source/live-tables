@@ -1,7 +1,7 @@
 import { useAppDispatch } from '@/hooks/reduxHandlers';
 import { openDialog } from '@/store/features/dialog';
 import { BaseConfig } from '@/types';
-import { DropdownMenu } from '@radix-ui/themes';
+import { DropdownMenu, Tooltip } from '@radix-ui/themes';
 import React, { ReactNode, useState } from 'react';
 
 type Props = {
@@ -71,17 +71,26 @@ export default function BaseDropDownMenu(Props: Props) {
         <DropdownMenu.Item onClick={renameBaseHandler} shortcut="⌘ E">
           Rename
         </DropdownMenu.Item>
-        <DropdownMenu.Item disabled shortcut="⌘ D">
-          Duplicate
-        </DropdownMenu.Item>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Item disabled shortcut="⌘ N">
-          Archive
-        </DropdownMenu.Item>
+        <Tooltip side="right" sideOffset={10} content="Upcoming Feature">
+          <DropdownMenu.Item disabled shortcut="⌘ D">
+            Duplicate
+          </DropdownMenu.Item>
+        </Tooltip>
 
         <DropdownMenu.Separator />
-        <DropdownMenu.Item disabled>Share</DropdownMenu.Item>
-        <DropdownMenu.Item disabled>Add to favorites</DropdownMenu.Item>
+        <Tooltip side="right" sideOffset={10} content="Upcoming Feature">
+          <DropdownMenu.Item disabled shortcut="⌘ N">
+            Archive
+          </DropdownMenu.Item>
+        </Tooltip>
+
+        <DropdownMenu.Separator />
+        <Tooltip side="right" sideOffset={10} content="Upcoming Feature">
+          <DropdownMenu.Item disabled>Share</DropdownMenu.Item>
+        </Tooltip>
+        <Tooltip side="right" sideOffset={10} content="Upcoming Feature">
+          <DropdownMenu.Item disabled>Add to favorites</DropdownMenu.Item>
+        </Tooltip>
         <DropdownMenu.Separator />
         <DropdownMenu.Item onClick={deleteBaseHandler} shortcut="⌘ ⌫" color="red">
           Delete

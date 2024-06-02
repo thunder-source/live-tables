@@ -84,7 +84,7 @@ export default function HeaderTableNavigationMenu({ base }: { base: BaseConfig }
   return (
     <div className="flex gap-2">
       <div className="relative flex overflow-hidden rounded-md bg-accent-a3">
-        <div className="relative flex overflow-hidden rounded-md px-2">
+        <div className="relative flex w-full overflow-hidden rounded-md px-2">
           <AnimatePresence>
             {!atLeftmost && (
               <motion.div
