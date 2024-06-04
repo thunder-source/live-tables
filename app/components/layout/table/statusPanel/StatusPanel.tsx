@@ -3,7 +3,6 @@ import { CustomStatusPanelProps } from 'ag-grid-react';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 
-
 export default function StatusPanel(props: CustomStatusPanelProps) {
   const [count, setCount] = useState(0);
   const [activeColumns, setActiveColumns] = useState<any>([]);
@@ -13,7 +12,7 @@ export default function StatusPanel(props: CustomStatusPanelProps) {
     setActiveColumns(props.api.getAllDisplayedColumns());
   }, [props.api]);
 
-  console.log(props.api);
+  //   console.log(props.api);
   return (
     <div className="flex h-8 items-start p-1">
       <span className="w-[100px] text-xs text-accent-12">{count} Records</span>

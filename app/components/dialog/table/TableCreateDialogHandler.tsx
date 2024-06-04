@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '@/hooks/reduxHandlers';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHandlers';
 import { DialogState, closeDialog } from '@/store/features/dialog';
 import { Button, Dialog, Flex, Text, TextField } from '@radix-ui/themes';
 import { createTable } from '@/store/features/sideBarBasesTables';
-import { generateTableId } from '@/utils';
+import { generateTableId, generateTableName } from '@/utils';
 import toast from 'react-hot-toast';
 import useLoading from '@/hooks/useLoading';
 
 const TableCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog }) => {
   const dispatch = useAppDispatch();
+  const bases = useAppSelector((state) => state.sidebar.bases);
   const [nameInput, setNameInput] = useState('');
   const { additionalOptions, entityId } = dialog;
   const { isLoading, startLoading } = useLoading();
@@ -23,12 +24,13 @@ const TableCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog })
         toast.error('Please provide a valid tableOrder in additionalOptions');
         return;
       }
+      const tables = bases[entityId].tables;
       dispatch(
         createTable({
           baseId: entityId,
           table: {
             id: generateTableId(),
-            name: nameInput === '' ? `Table ${additionalOptions.tableOrder.length + 1}` : nameInput,
+            name: nameInput === '' ? generateTableName(tables) : nameInput,
             config: {},
           },
         }),

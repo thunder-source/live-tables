@@ -14,7 +14,12 @@ import {
 } from '@/store/features/sideBarBasesTables';
 import { RootState } from '@/store/app';
 import { BaseConfig, TableConfig, BaseConfigSchema, TableConfigSchema } from '@/types';
-import { generateBaseId, generateTableId, generateBaseName, generateTableName } from '@/utils';
+import {
+  generateBaseId,
+  generateTableId,
+  generateRandomBaseName,
+  generateRandomTableName,
+} from '@/utils';
 import toast from 'react-hot-toast';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
@@ -52,12 +57,12 @@ const SidebarBaseTable: React.FC = () => {
     setTableForm((prev) => ({ ...prev, id: generateTableId() }));
   };
 
-  const handleGenerateBaseName = () => {
-    setBaseForm((prev) => ({ ...prev, name: generateBaseName() }));
+  const handlegenerateRandomBaseName = () => {
+    setBaseForm((prev) => ({ ...prev, name: generateRandomBaseName() }));
   };
 
-  const handleGenerateTableName = () => {
-    setTableForm((prev) => ({ ...prev, name: generateTableName() }));
+  const handlegenerateRandomTableName = () => {
+    setTableForm((prev) => ({ ...prev, name: generateRandomTableName() }));
   };
 
   const handleAddBase = () => {
@@ -109,7 +114,7 @@ const SidebarBaseTable: React.FC = () => {
   const handleCreateBasesTablesByNumber = (baseNo: number, tableNo: number) => {
     for (let i = 0; i < baseNo; i++) {
       const baseId = generateBaseId();
-      const baseName = generateBaseName();
+      const baseName = generateRandomBaseName();
       const base: BaseConfig = {
         id: baseId,
         name: baseName,
@@ -120,7 +125,7 @@ const SidebarBaseTable: React.FC = () => {
 
       for (let j = 0; j < tableNo; j++) {
         const tableId = generateTableId();
-        const tableName = generateTableName();
+        const tableName = generateRandomTableName();
         const table: TableConfig = {
           id: tableId,
           name: tableName,
@@ -180,7 +185,7 @@ const SidebarBaseTable: React.FC = () => {
   const addBasesByNumber = (numBases: number) => {
     for (let i = 0; i < numBases; i++) {
       const baseId = generateBaseId();
-      const baseName = generateBaseName();
+      const baseName = generateRandomBaseName();
       const base: BaseConfig = {
         id: baseId,
         name: baseName,
@@ -198,7 +203,7 @@ const SidebarBaseTable: React.FC = () => {
     if (selectedBase) {
       for (let i = 0; i < numTables; i++) {
         const tableId = generateTableId();
-        const tableName = generateTableName();
+        const tableName = generateRandomTableName();
         const table: TableConfig = {
           id: tableId,
           name: tableName,
@@ -240,7 +245,10 @@ const SidebarBaseTable: React.FC = () => {
                 placeholder="Base Name"
                 className="flex-grow border p-2"
               />
-              <button onClick={handleGenerateBaseName} className="bg-gray-500 px-4 py-2 text-white">
+              <button
+                onClick={handlegenerateRandomBaseName}
+                className="bg-gray-500 px-4 py-2 text-white"
+              >
                 Generate Base Name
               </button>
             </div>
@@ -279,7 +287,7 @@ const SidebarBaseTable: React.FC = () => {
                 className="flex-grow border p-2"
               />
               <button
-                onClick={handleGenerateTableName}
+                onClick={handlegenerateRandomTableName}
                 className="bg-gray-500 px-4 py-2 text-white"
               >
                 Generate Table Name

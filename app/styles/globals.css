@@ -45,13 +45,25 @@
 .ag-header,
 .ag-header-row {
   height: 40px !important;
-  background: var(--gray-a3) !important;
+  background: var(--gray-a2) !important;
   color: var(--accent-a12) !important;
 }
 
 .ag-row {
   background: var(--accent-a1) !important;
   color: var(--accent-a12) !important;
+  border-color: var(--gray-a4) !important;
+}
+.ag-pinned-left-header,
+.ag-cell-last-left-pinned {
+  border-right-color: var(--gray-a6) !important;
+  border-bottom: 0px !important;
+  border-top: 0px !important;
+}
+
+.ag-pinned-left-cols-container {
+  height: 100% !important;
+  border-right: 2px solid var(--gray-a6) !important;
 }
 
 .ag-theme-quartz {
@@ -60,4 +72,16 @@
   --ag-header-background-color: var(--accent-a12);
   --ag-header-cell-hover-background-color: rgb(80, 40, 140);
   --ag-header-cell-moving-background-color: rgb(80, 40, 140);
+}
+
+.ag-fill-handle {
+  cursor: crosshair !important;
+}
+
+.ag-header-cell {
+  padding: 0 !important;
+}
+
+.ag-advanced-filter-header {
+  display: none !important;
 }

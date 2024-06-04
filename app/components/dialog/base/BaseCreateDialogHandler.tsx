@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '@/hooks/reduxHandlers';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHandlers';
 import { DialogState, closeDialog } from '@/store/features/dialog';
 import { Button, Dialog, Flex, Text, TextField } from '@radix-ui/themes';
 import { createBase } from '@/store/features/sideBarBasesTables';
@@ -8,15 +8,18 @@ import useLoading from '@/hooks/useLoading';
 
 const BaseCreateDialogHandler: React.FC<{ dialog: DialogState }> = ({ dialog }) => {
   const dispatch = useAppDispatch();
+  const bases = useAppSelector((state) => state.sidebar.bases);
   const [nameInput, setNameInput] = useState('');
   const { isLoading, startLoading } = useLoading();
+
+  console.log(dialog);
 
   const createBaseReduxHandler = () => {
     startLoading(() => {
       dispatch(
         createBase({
           id: generateBaseId(),
-          name: nameInput === '' ? generateBaseName() : nameInput,
+          name: nameInput === '' ? generateBaseName(bases) : nameInput,
           tableOrder: [],
           tables: {},
         }),
