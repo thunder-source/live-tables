@@ -10,23 +10,19 @@ import { IoIosArrowDown } from 'react-icons/io';
 import clsx from 'clsx';
 import TableRowHeightDropDown from '@/components/dropdown/table/headerTools/TableRowHeightDropDown';
 import { AgGridReact } from 'ag-grid-react';
+import TableHideFieldsDropDown from '@/components/dropdown/table/headerTools/TableHideFieldsDropDown';
 
 type Props = {
   isViewActive: boolean;
   setIsViewActive: React.Dispatch<React.SetStateAction<boolean>>;
-  rowHeight: number;
-  setRowHeight: React.Dispatch<React.SetStateAction<number>>;
   gridRef: React.RefObject<AgGridReact<any>>;
 };
 
 export default function HeaderToolsController({
   isViewActive,
   setIsViewActive,
-  rowHeight,
-  setRowHeight,
   gridRef,
 }: Props) {
-
   // useEffect(() => {
   //   console.log(gridRef.current?.api?.isAnyFilterPresent())
   // }, [gridRef.current?.api, gridRef])
@@ -52,15 +48,22 @@ export default function HeaderToolsController({
         </Button>
       </Tooltip>
 
-      <Tooltip content="Upcoming Feature">
+      <TableHideFieldsDropDown gridRef={gridRef}>
         <Button disabled variant="ghost" className="cursor-pointer ">
           <FaRegEyeSlash size={15} /> Hide Field
         </Button>
-      </Tooltip>
+      </TableHideFieldsDropDown>
 
-      <Button onClick={() => {
-        gridRef.current && gridRef.current.api.showAdvancedFilterBuilder()
-      }} variant="ghost" className={clsx("cursor-pointer ", gridRef.current?.api?.isAnyFilterPresent() && "bg-accent-a6")}>
+      <Button
+        onClick={() => {
+          gridRef.current && gridRef.current.api.showAdvancedFilterBuilder();
+        }}
+        variant="ghost"
+        className={clsx(
+          'cursor-pointer ',
+          gridRef.current?.api?.isAnyFilterPresent() && 'bg-accent-a6',
+        )}
+      >
         <IoFilter size={15} /> Filter
       </Button>
       <Tooltip content="Upcoming Feature">
@@ -79,18 +82,14 @@ export default function HeaderToolsController({
         </Button>
       </Tooltip>
 
-      <TableRowHeightDropDown rowHeight={rowHeight} setRowHeight={setRowHeight}>
+      <TableRowHeightDropDown gridRef={gridRef}>
         <Button variant="ghost" className="cursor-pointer text-accent-12">
           <TbArrowAutofitHeight size={15} /> Row Height
         </Button>
       </TableRowHeightDropDown>
 
       <Tooltip content="Upcoming Feature">
-        <Button
-          disabled
-          variant="ghost"
-          className="cursor-pointer"
-        >
+        <Button disabled variant="ghost" className="cursor-pointer">
           <RiShareForward2Line size={15} /> Share and sync
         </Button>
       </Tooltip>

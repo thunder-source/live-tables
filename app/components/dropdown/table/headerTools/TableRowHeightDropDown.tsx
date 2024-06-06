@@ -1,17 +1,21 @@
 import { DropdownMenu } from '@radix-ui/themes';
+import { AgGridReact } from 'ag-grid-react';
 import clsx from 'clsx';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { IoCheckmarkOutline } from 'react-icons/io5';
 type Props = {
   children: ReactNode;
-  rowHeight: number;
-  setRowHeight: React.Dispatch<React.SetStateAction<number>>;
+  gridRef: React.RefObject<AgGridReact<any>>;
 };
 
-export default function TableRowHeightDropDown({ children, rowHeight, setRowHeight }: Props) {
+export default function TableRowHeightDropDown({ children, gridRef }: Props) {
+  const [rowHeight, setRowHeight] = useState(gridRef.current ? gridRef.current.props.rowHeight : 32)
+
   const rowHeightHandler = (height: number) => {
     setRowHeight(height);
+    gridRef.current && gridRef.current.api.updateGridOptions({ 'rowHeight': height });
   };
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>{children}</DropdownMenu.Trigger>

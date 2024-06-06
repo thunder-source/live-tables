@@ -5,9 +5,10 @@ import { AgGridReact } from 'ag-grid-react';
 import React, { useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
+
+
 export default function Page() {
   const [isViewActive, setIsViewActive] = useState(false);
-  const [rowHeight, setRowHeight] = useState<number>(32);
   const gridRef = useRef<AgGridReact>(null);
 
   return (
@@ -16,8 +17,6 @@ export default function Page() {
         gridRef={gridRef}
         isViewActive={isViewActive}
         setIsViewActive={setIsViewActive}
-        setRowHeight={setRowHeight}
-        rowHeight={rowHeight}
       />
       <div className="flex w-full flex-1 bg-accent-a1">
         <PanelGroup autoSaveId="table" direction="horizontal">
@@ -38,7 +37,7 @@ export default function Page() {
             </>
           )}
           <Panel order={2} id="table-panel" className="h-full w-full flex-1 bg-accent-a1">
-            <MainTable rowHeight={rowHeight} gridRef={gridRef} />
+            <MainTable gridRef={gridRef} />
           </Panel>
         </PanelGroup>
       </div>

@@ -85,3 +85,11 @@
 .ag-advanced-filter-header {
   display: none !important;
 }
+
+/* .ag-pinned-left-header {
+  overflow: visible !important;
+} */
+
+.ag-row-last {
+  overflow: visible !important;
+}

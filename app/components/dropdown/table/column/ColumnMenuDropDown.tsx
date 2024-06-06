@@ -12,8 +12,11 @@ type Props = {
   side?: 'top' | 'right' | 'bottom' | 'left' | undefined;
 };
 
-export default function ColumnMenuDropDown(Props: Props) {
-  const { children, align = 'end', side = 'bottom' } = Props;
+export default function ColumnMenuDropDown({
+  children,
+  align = 'end',
+  side = 'bottom',
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
   //disableOnClick = false,
   // const dispatch = useAppDispatch();
@@ -51,6 +54,10 @@ export default function ColumnMenuDropDown(Props: Props) {
   //     event.preventDefault();
   //     setIsOpen(true);
   // };
+  const handelDeleteColumn = () => {
+    // console.log(props.column.getColId());
+    // console.log('delete column');
+  };
 
   return (
     <DropdownMenu.Root
@@ -86,7 +93,9 @@ export default function ColumnMenuDropDown(Props: Props) {
         </Tooltip>
         <DropdownMenu.Separator />
         <DropdownMenu.Item>Hide Column</DropdownMenu.Item>
-        <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
+        <DropdownMenu.Item onClick={handelDeleteColumn} color="red">
+          Delete
+        </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>
   );
