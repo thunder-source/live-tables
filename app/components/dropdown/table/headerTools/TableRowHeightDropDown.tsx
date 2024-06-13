@@ -9,11 +9,13 @@ type Props = {
 };
 
 export default function TableRowHeightDropDown({ children, gridRef }: Props) {
-  const [rowHeight, setRowHeight] = useState(gridRef.current ? gridRef.current.props.rowHeight : 32)
+  const [rowHeight, setRowHeight] = useState(
+    gridRef.current ? gridRef.current.props.rowHeight : 32,
+  );
 
   const rowHeightHandler = (height: number) => {
     setRowHeight(height);
-    gridRef.current && gridRef.current.api.updateGridOptions({ 'rowHeight': height });
+    gridRef.current && gridRef.current.api.updateGridOptions({ rowHeight: height });
   };
 
   return (

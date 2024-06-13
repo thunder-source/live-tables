@@ -11,7 +11,6 @@ import {
 } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import rootReducer from '../features/rootReducer';
-// import { mainApi } from '../services/main';
 
 const createNoopStorage = () => {
   return {

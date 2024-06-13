@@ -1,33 +1,36 @@
 'use client';
 import HeaderToolsController from '@/components/layout/table/HeaderToolsController';
 import MainTable from '@/components/layout/table/MainTable';
+import HeaderToolsControllerSkeleton from '@/components/skeleton/layout/table/HeaderToolsControllerSkeleton';
+import { useAppSelector } from '@/hooks/reduxHandlers';
 import { AgGridReact } from 'ag-grid-react';
+import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 
-
-
 export default function Page() {
-  const [isViewActive, setIsViewActive] = useState(false);
+  const views = useAppSelector(state => state.table.views)
   const gridRef = useRef<AgGridReact>(null);
-
+  const [loading, setLoading] = useState(true);
   return (
     <>
-      <HeaderToolsController
-        gridRef={gridRef}
-        isViewActive={isViewActive}
-        setIsViewActive={setIsViewActive}
-      />
-      <div className="flex w-full flex-1 bg-accent-a1">
+      <div className="flex flex-col w-full flex-1 bg-accent-a1">
+        {!loading ? (
+          <HeaderToolsController
+            gridRef={gridRef}
+          />
+        ) : (
+          <HeaderToolsControllerSkeleton />
+        )}
         <PanelGroup autoSaveId="table" direction="horizontal">
-          {isViewActive && (
+          {views.isOpen && (
             <>
               <Panel
                 defaultSize={20}
                 collapsible={true}
                 order={1}
                 id="view-panel"
-                className="min-w-[180px] max-w-[600px] "
+                className={clsx('min-w-[180px] max-w-[600px]', `w-[${views.width}]`)}
               >
                 <div className="flex h-full items-center justify-center bg-accent-a2">
                   Views panel
@@ -37,7 +40,7 @@ export default function Page() {
             </>
           )}
           <Panel order={2} id="table-panel" className="h-full w-full flex-1 bg-accent-a1">
-            <MainTable gridRef={gridRef} />
+            <MainTable setLoading={setLoading} gridRef={gridRef} />
           </Panel>
         </PanelGroup>
       </div>

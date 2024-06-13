@@ -12,11 +12,7 @@ type Props = {
   side?: 'top' | 'right' | 'bottom' | 'left' | undefined;
 };
 
-export default function ColumnMenuDropDown({
-  children,
-  align = 'end',
-  side = 'bottom',
-}: Props) {
+export default function ColumnMenuDropDown({ children, align = 'end', side = 'bottom' }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   //disableOnClick = false,
   // const dispatch = useAppDispatch();

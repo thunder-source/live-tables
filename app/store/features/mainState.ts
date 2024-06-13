@@ -17,7 +17,7 @@ const initialState: initialStateProps = {
 };
 
 const mainState = createSlice({
-  name: 'mainState',
+  name: 'main',
   initialState,
   reducers: {
     toggleSideBar: (state) => {

@@ -10,7 +10,7 @@ import { useParams } from 'next/navigation';
 
 export default function BaseHeader() {
   const { bases } = useAppSelector((state) => state.sidebar);
-  const { sidebar } = useAppSelector((state) => state.mainState);
+  const { sidebar } = useAppSelector((state) => state.main);
   const dispatch = useAppDispatch();
   const param = useParams();
   let activeBase = null;

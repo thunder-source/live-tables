@@ -56,7 +56,7 @@ const menuItemStyles: MenuItemStyles = {
 
 export default function SideBar() {
   const { baseOrder, bases } = useAppSelector((state) => state.sidebar);
-  const { sidebar } = useAppSelector((state) => state.mainState);
+  const { sidebar } = useAppSelector((state) => state.main);
   const dispatch = useAppDispatch();
   const [collapsed, setCollapsed] = React.useState(sidebar.sidebarActiveWidth === 80);
   const [baseItemsOrder, setBaseItemsOrder] = useState(baseOrder);

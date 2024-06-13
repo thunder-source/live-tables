@@ -14,7 +14,6 @@ export default function PrimarySelectCell(props: CustomCellRendererProps) {
   useEffect(() => {
     props.registerRowDragger(myRef.current!);
 
-
     // console.log(props.api.getRowNode('1')?.isHovered())
     // console.log(props.node.isHovered())
     // console.log(props.node.isSelected())
@@ -22,7 +21,7 @@ export default function PrimarySelectCell(props: CustomCellRendererProps) {
   // console.log(props.node.lastChild)
   if (props.node.lastChild) {
     // props.fullWidth
-    // props.api.setcell 
+    // props.api.setcell
   }
   // const upcomingFeature = <>
   //   <div className="h-6 w-1.5 rounded-radius_3 bg-accent-10">&nbsp;</div>

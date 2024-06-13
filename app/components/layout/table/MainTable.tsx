@@ -12,6 +12,9 @@ import CustomHeader from './columns/CustomHeader';
 import { generateColumnId } from '@/utils';
 import CustomGrouping from './grouping/CustomGrouping';
 import { IsFullWidthRowParams } from 'ag-grid-charts-enterprise';
+import HeaderToolsController from './HeaderToolsController';
+import HeaderToolsControllerSkeleton from '@/components/skeleton/layout/table/HeaderToolsControllerSkeleton';
+import { useAppSelector } from '@/hooks/reduxHandlers';
 
 export interface IOlympicData {
   athlete: string;
@@ -34,9 +37,10 @@ export interface IClickableStatusBar extends IStatusPanel {
 type props = {
   // rowHeight: number;
   gridRef: React.RefObject<AgGridReact<any>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function MainTable({ gridRef }: props) {
+export default function MainTable({ gridRef, setLoading }: props) {
   const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
   const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
   const [rowData, setRowData] = useState<IOlympicData[]>([
@@ -110,7 +114,7 @@ export default function MainTable({ gridRef }: props) {
       field: 'SNo.',
       // ,
       // isPrimary: true,
-      type: 'primary',
+      type: 'primary-hidden',
       cellClass: 'locked-col',
       width: 100,
       pinned: true,
@@ -155,15 +159,31 @@ export default function MainTable({ gridRef }: props) {
     //     width: 120,
     //     editable: true,
     // },
-    { field: 'athlete', editable: true, rowGroup: false, },
-    // { field: 'country', editable: true,  },
-    // { field: 'year', editable: true,  },
-    // { field: 'date', editable: true,  },
-    // { field: 'sport', editable: true,  },
-    // { field: 'gold', editable: true,  },
-    // { field: 'silver', editable: true,  },
-    // { field: 'bronze', editable: true,  },
-    // { field: 'total', editable: true,  },
+    { field: 'athlete', editable: true, rowGroup: false },
+    { field: 'country', editable: true, },
+    { field: 'year', editable: true, },
+    { field: 'date', editable: true, },
+    { field: 'sport', editable: true, },
+    { field: 'gold', editable: true, },
+    { field: 'silver', editable: true, },
+    { field: 'bronze', editable: true, },
+    { field: 'total', editable: true, },
+    { field: 'country', editable: true, },
+    { field: 'year', editable: true, },
+    { field: 'date', editable: true, },
+    { field: 'sport', editable: true, },
+    { field: 'gold', editable: true, },
+    { field: 'silver', editable: true, },
+    { field: 'bronze', editable: true, },
+    { field: 'total', editable: true, },
+    { field: 'country', editable: true, },
+    { field: 'year', editable: true, },
+    { field: 'date', editable: true, },
+    { field: 'sport', editable: true, },
+    { field: 'gold', editable: true, },
+    { field: 'silver', editable: true, },
+    { field: 'bronze', editable: true, },
+    { field: 'total', editable: true, },
     // {
     //     field: 'Add Column',
     //     colId: 'AddColumn',
@@ -218,27 +238,18 @@ export default function MainTable({ gridRef }: props) {
       props.api.applyTransaction({ add: [newRow] });
     };
 
-    return (
-      <button onClick={addRow}></button>
-    );
+    return <button onClick={addRow}></button>;
   };
-
 
   const components = useMemo<{
     [p: string]: any;
   }>(() => {
     return {
-      agColumnHeader: (props: CustomHeaderProps) => (
-        <CustomHeader
-          props={props}
-        />
-      ),
+      agColumnHeader: (props: CustomHeaderProps) => <CustomHeader props={props} />,
 
       // addRowButtonRenderer: AddRowButtonRenderer,
     };
   }, []);
-
-
 
   // const isFullWidthRow = useCallback((params: IsFullWidthRowParams) => {
   //     return isFullWidth(params.rowNode.data);
@@ -250,10 +261,19 @@ export default function MainTable({ gridRef }: props) {
 
   return (
     <div style={containerStyle}>
+      {/* {!loading ? (
+        <HeaderToolsController
+          gridRef={gridRef}
+        />
+      ) : (
+        <HeaderToolsControllerSkeleton />
+      )} */}
       <div style={{ height: '100%', boxSizing: 'border-box' }}>
         <div style={gridStyle} className={'ag-theme-quartz'}>
+
           <AgGridReact<any>
             ref={gridRef}
+            rowHeight={32}
             // rowHeight={rowHeight}
             components={components}
             defaultColDef={defaultColDef}
@@ -268,6 +288,9 @@ export default function MainTable({ gridRef }: props) {
             suppressMoveWhenRowDragging={true}
             // rowDragEntireRow={true}
             enableAdvancedFilter={true}
+            onGridReady={() => {
+              setLoading(false);
+            }}
           // columnHoverHighlight={true}
           // statusBar={statusBar}
           // fullWidthCellRenderer={fullWidthCellRenderer}

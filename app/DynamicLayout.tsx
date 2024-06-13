@@ -7,7 +7,7 @@ import BaseHeader from './layout/BaseHeader';
 import { useParams } from 'next/navigation';
 
 export default function DynamicLayout({ children }: { children: ReactNode }) {
-  const { sidebar } = useAppSelector((state) => state.mainState);
+  const { sidebar } = useAppSelector((state) => state.main);
   const param = useParams();
   return (
     <div className="flex h-screen w-screen">
@@ -19,11 +19,7 @@ export default function DynamicLayout({ children }: { children: ReactNode }) {
           'pl-[80px] ': sidebar.sidebarActiveWidth === 80 && sidebar.isSideBarOpen,
         })}
       >
-        {
-          param.baseId === undefined && (
-            <BaseHeader />
-          )
-        }
+        {param.baseId === undefined && <BaseHeader />}
         {children}
       </div>
     </div>
